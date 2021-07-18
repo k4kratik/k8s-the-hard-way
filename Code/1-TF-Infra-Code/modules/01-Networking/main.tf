@@ -41,7 +41,7 @@ resource "aws_nat_gateway" "nat-gw" {
 resource "aws_subnet" "public-subnet-1" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.subnet_1_cidr
-  availability_zone       = data.aws_availability_zones.available_az.names[0]
+  availability_zone       = var.az_1
   map_public_ip_on_launch = true
 
   tags = {
@@ -52,7 +52,7 @@ resource "aws_subnet" "public-subnet-1" {
 resource "aws_subnet" "public-subnet-2" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.subnet_2_cidr
-  availability_zone       = data.aws_availability_zones.available_az.names[1]
+  availability_zone       = var.az_2
   map_public_ip_on_launch = true
 
   tags = {
@@ -60,28 +60,16 @@ resource "aws_subnet" "public-subnet-2" {
   }
 }
 
-resource "aws_subnet" "private-subnet-1" {
+resource "aws_subnet" "public-subnet-3" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.subnet_3_cidr
-  availability_zone       = data.aws_availability_zones.available_az.names[0]
-  map_public_ip_on_launch = false
+  availability_zone       = var.az_3
+  map_public_ip_on_launch = true
 
   tags = {
-    Name = "Pvt-Subnet-1"
+    Name = "Pub-Subnet-3"
   }
 }
-
-resource "aws_subnet" "private-subnet-2" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.subnet_4_cidr
-  availability_zone       = data.aws_availability_zones.available_az.names[1]
-  map_public_ip_on_launch = false
-
-  tags = {
-    Name = "Pvt-Subnet-2"
-  }
-}
-
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.vpc.id
   route {
@@ -104,6 +92,44 @@ resource "aws_route_table_association" "public-route-table-association-2" {
   route_table_id = aws_route_table.public-route-table.id
 }
 
+resource "aws_route_table_association" "public-route-table-association-3" {
+  subnet_id      = aws_subnet.public-subnet-3.id
+  route_table_id = aws_route_table.public-route-table.id
+}
+
+resource "aws_subnet" "private-subnet-1" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.subnet_4_cidr
+  availability_zone       = var.az_1
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "Pvt-Subnet-1"
+  }
+}
+
+resource "aws_subnet" "private-subnet-2" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.subnet_5_cidr
+  availability_zone       = var.az_2
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "Pvt-Subnet-2"
+  }
+}
+
+resource "aws_subnet" "private-subnet-3" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.subnet_6_cidr
+  availability_zone       = var.az_3
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "Pvt-Subnet-3"
+  }
+}
+
 resource "aws_route_table" "private-route-table" {
   vpc_id = aws_vpc.vpc.id
 
@@ -124,5 +150,10 @@ resource "aws_route_table_association" "private-route-table-association-1" {
 
 resource "aws_route_table_association" "private-route-table-association-2" {
   subnet_id      = aws_subnet.private-subnet-2.id
+  route_table_id = aws_route_table.private-route-table.id
+}
+
+resource "aws_route_table_association" "private-route-table-association-3" {
+  subnet_id      = aws_subnet.private-subnet-3.id
   route_table_id = aws_route_table.private-route-table.id
 }

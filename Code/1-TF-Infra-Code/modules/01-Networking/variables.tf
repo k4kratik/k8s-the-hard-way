@@ -27,3 +27,21 @@ variable "subnet_4_cidr" {
   default = "10.0.4.0/24"
 
 }
+
+variable "subnet_5_cidr" {
+
+  default = "10.0.5.0/24"
+
+}
+
+variable "subnet_6_cidr" {
+
+  default = "10.0.6.0/24"
+
+}
+
+variable "az_1" {}
+
+variable "az_2" {}
+
+variable "az_3" {}
