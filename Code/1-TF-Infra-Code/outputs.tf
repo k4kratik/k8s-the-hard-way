@@ -1,5 +1,5 @@
 output "account_id" {
-  value = data.aws_caller_identity.current.account_id
+  value = data.aws_caller_identity.current_account_info.account_id
 
 }
 

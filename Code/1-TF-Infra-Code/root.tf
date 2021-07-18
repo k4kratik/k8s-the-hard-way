@@ -5,9 +5,15 @@ module "networking" {
   az_3   = data.aws_availability_zones.available_az.names[2]
 }
 
-# module "compute" {
-#   source = "./modules/02-Compute"
-#   az_1   = data.aws_availability_zones.available_az.names[0]
-#   az_2   = data.aws_availability_zones.available_az.names[1]
-#   az_3   = data.aws_availability_zones.available_az.names[2]
-# }
+module "compute" {
+  source = "./modules/02-Compute"
+
+  # account-id = data.current_account_info.account_id
+
+  az = data.aws_availability_zones.available_az.names
+
+  vpc_id = module.networking.vpc_id
+
+  public_subnets  = module.networking.public_subnets
+  private_subnets = module.networking.private_subnets
+}
