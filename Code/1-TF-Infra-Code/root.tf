@@ -8,8 +8,6 @@ module "networking" {
 module "compute" {
   source = "./modules/02-Compute"
 
-  # account-id = data.current_account_info.account_id
-
   az = data.aws_availability_zones.available_az.names
 
   vpc_id = module.networking.vpc_id
