@@ -13,9 +13,10 @@ resource "aws_security_group" "k8s_bastion_SG" {
   }
 
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
+    description = "Allow Public SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
 
     // This means, all ip address are allowed to ssh !
     // Do not do it in the production. Put your office or home address in it!
@@ -40,6 +41,17 @@ resource "aws_security_group" "k8s_controller_SG" {
     protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "Allow SSH From Bastion"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+
+    // This means, all ip address are allowed to ssh !
+    // Do not do it in the production. Put your office or home address in it!
+    cidr_blocks = ["${aws_instance.k8s-bastion-instance[0].private_ip}/32"]
+  }
+
 
   tags = {
     Name = "k8s_controller_SG"
@@ -58,7 +70,16 @@ resource "aws_security_group" "k8s_worker_SG" {
     protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "Allow SSH From Bastion"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
 
+    // This means, all ip address are allowed to ssh !
+    // Do not do it in the production. Put your office or home address in it!
+    cidr_blocks = ["${aws_instance.k8s-bastion-instance[0].private_ip}/32"]
+  }
   tags = {
     Name = "k8s_worker_SG"
   }
