@@ -8,3 +8,7 @@ Here we will create 7 EC2 Instances, I know that's a lot to start with. But Trus
 - 1 Bastion Host to access and update our cluster as it will be in a private subnet
 - 1 Load Balancer
 - Others which does not incur as any cost like Target Group, Security Groups, etc.
+
+I am using `count` in Resources like EC2s so I don't have to repeat my code.
+
+For Now I am keeping the SG Ingress rule minimal, down the road, I will add more ingress rules as required.
