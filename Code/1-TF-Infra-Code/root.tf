@@ -10,7 +10,7 @@ module "compute" {
 
   az = data.aws_availability_zones.available_az.names
 
-  vpc_id = module.networking.vpc_id
+  vpc = module.networking.vpc
 
   public_subnets  = module.networking.public_subnets
   private_subnets = module.networking.private_subnets

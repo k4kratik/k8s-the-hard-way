@@ -1,6 +1,6 @@
 variable "az" {}
 
-variable "vpc_id" {}
+variable "vpc" {}
 
 variable "bastion_ebs_size" {
   default = "8"

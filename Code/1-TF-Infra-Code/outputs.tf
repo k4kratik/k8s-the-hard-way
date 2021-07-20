@@ -5,7 +5,7 @@ output "account_id" {
 
 #  networking
 output "NETWORK-vpc_id" {
-  value = module.networking.vpc_id
+  value = module.networking.vpc.id
 }
 
 output "NETWORK-elastic-ip-addr" {
