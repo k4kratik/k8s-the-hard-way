@@ -39,3 +39,6 @@ output "EC2-bastion_instances_id_and_ip" {
   value = [module.compute.bastion_instances_id, module.compute.bastion_instance_private_ip]
 }
 
+output "ELB-k8s_masters_lb_dns" {
+  value = module.compute.k8s_masters_lb_dns
+}

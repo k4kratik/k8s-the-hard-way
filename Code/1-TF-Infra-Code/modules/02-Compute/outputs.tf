@@ -25,3 +25,9 @@ output "controller_instances_private_ips" {
 output "worker_instances_private_ips" {
   value = aws_instance.k8s-worker-instance.*.private_ip
 }
+
+# LB
+
+output "k8s_masters_lb_dns" {
+  value = aws_lb.k8s_control_plane_lb.dns_name
+}

@@ -85,13 +85,13 @@ resource "aws_security_group" "k8s_worker_SG" {
   }
 }
 
-# SG for ALB
+# SG for Public ALB
 
 
-resource "aws_security_group" "k8s_control_plane_lb_sg" {
+resource "aws_security_group" "k8s_public_lb_sg" {
 
   vpc_id = var.vpc.id
-  name   = "k8s_control_plane_lb_sg"
+  name   = "k8s_public_lb_sg"
 
 
   egress {
@@ -102,14 +102,14 @@ resource "aws_security_group" "k8s_control_plane_lb_sg" {
   }
 
   ingress {
-    description = "Allow Access to K8s API Server from Worker EC2s"
-    from_port   = 6443
-    to_port     = 6443
+    description = "Allow Access for some App"
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
-    cidr_blocks = [var.vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "k8s_control_plane_lb_sg"
+    Name = "k8s_public_lb_sg"
   }
 }
