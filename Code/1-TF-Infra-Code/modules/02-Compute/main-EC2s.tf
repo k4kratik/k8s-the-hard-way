@@ -3,7 +3,8 @@ resource "aws_instance" "k8s-bastion-instance" {
 
   associate_public_ip_address = true
 
-  ami               = data.aws_ami.latest-ubuntu.image_id
+  # ami               = data.aws_ami.latest-ubuntu.image_id
+  ami               = "ami-0cacd59d567c14579"
   availability_zone = var.az[count.index]
   instance_type     = var.instance_type
   subnet_id         = var.public_subnets[count.index].id
@@ -30,7 +31,8 @@ resource "aws_instance" "k8s-controller-instance" {
 
   associate_public_ip_address = false
 
-  ami               = data.aws_ami.latest-ubuntu.image_id
+  # ami               = data.aws_ami.latest-ubuntu.image_id
+  ami               = "ami-0cacd59d567c14579"
   availability_zone = var.az[count.index]
   instance_type     = var.instance_type
   subnet_id         = var.private_subnets[count.index].id
@@ -57,7 +59,8 @@ resource "aws_instance" "k8s-worker-instance" {
 
   associate_public_ip_address = false
 
-  ami               = data.aws_ami.latest-ubuntu.image_id
+  # ami               = data.aws_ami.latest-ubuntu.image_id
+  ami               = "ami-0cacd59d567c14579"
   availability_zone = var.az[count.index]
   instance_type     = var.instance_type
   subnet_id         = var.private_subnets[count.index].id

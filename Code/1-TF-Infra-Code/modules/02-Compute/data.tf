@@ -19,3 +19,5 @@ data "aws_ami" "latest-ubuntu" {
     values = ["hvm"]
   }
 }
+
+# I was using this to fetch the latest ubuntu  21 AMI but then I faced an issue where If my latest AMI is changed, my EC2 will have to be replaced with new EC2s with new AMIs and I dont want to replace them.
