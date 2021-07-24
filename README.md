@@ -11,3 +11,9 @@ This is a very good exercise to do if you want to learn K8s internal working. Al
 
 
 
+Also Evaluate Terraform Cloud
+
+- [ ] DNS Plugin - CoreDNS/?
+- [ ] Networking Plugin - Weave/Calico/Flannel
+
+- [ ] Storage Plugin - for PV (Local,S3 or EBS)
