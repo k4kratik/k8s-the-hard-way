@@ -1,0 +1,6 @@
+- hosts:
+    - bastion
+    - masters
+    - workers
+  roles:
+    - k8s-common
