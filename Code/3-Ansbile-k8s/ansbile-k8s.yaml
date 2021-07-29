@@ -4,3 +4,4 @@
     - workers
   roles:
     - k8s-common
+  become: true
