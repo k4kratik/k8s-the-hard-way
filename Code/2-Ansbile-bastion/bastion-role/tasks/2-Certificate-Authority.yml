@@ -1,0 +1,15 @@
+- name: Copy CA config file for  CA Key and Cert generation
+  ansible.builtin.copy:
+    src: files/ca/
+    dest: "{{CA_DIR}}"
+
+- name: ls for the CA files
+  command: ls -la "{{CA_DIR}}"
+
+- name: Generate CA Cert and Key
+  command: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+  args:
+    chdir: "{{CA_DIR}}"
+
+- name: ls for the CA files
+  command: ls -la "{{CA_DIR}}"

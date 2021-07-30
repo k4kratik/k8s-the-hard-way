@@ -28,3 +28,5 @@
 
 - debug:
     var: script_output.stdout_lines
+
+- include_tasks: 2-Certificate-Authority.yml
