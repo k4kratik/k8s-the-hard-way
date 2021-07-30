@@ -7,7 +7,7 @@
   command: ls -la "{{CA_DIR}}"
 
 - name: Generate CA Cert and Key
-  command: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+  command: bash -c "cfssl gencert -initca ca-csr.json | cfssljson -bare ca"
   args:
     chdir: "{{CA_DIR}}"
 
