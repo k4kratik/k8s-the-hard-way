@@ -13,3 +13,8 @@
 
 - name: ls for the CA files
   command: ls -la "{{CA_DIR}}"
+
+- name: ansible copy CA files from remote to local
+  fetch:
+  src: "{{CA_DIR}}"
+  dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
