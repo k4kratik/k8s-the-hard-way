@@ -13,6 +13,8 @@ resource "aws_instance" "k8s-bastion-instance" {
 
   key_name = aws_key_pair.k8s_bastion_keypair.key_name
 
+  iam_instance_profile = aws_iam_instance_profile.bastion_ec2_IAM_profile.name
+
   root_block_device {
     volume_size = var.bastion_ebs_size
     tags = {
@@ -21,6 +23,7 @@ resource "aws_instance" "k8s-bastion-instance" {
   }
   tags = {
     Name = "k8s_bastion_instance-${count.index}"
+    Role = "k8s_bastion"
   }
 }
 
@@ -50,6 +53,7 @@ resource "aws_instance" "k8s-controller-instance" {
   }
   tags = {
     Name = "k8s_controller_instance-${count.index}"
+    Role = "k8s_master"
   }
 }
 
@@ -78,6 +82,7 @@ resource "aws_instance" "k8s-worker-instance" {
   }
   tags = {
     Name = "k8s_worker_instance-${count.index}"
+    Role = "k8s_bastion"
   }
 }
 
