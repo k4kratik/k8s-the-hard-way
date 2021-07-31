@@ -7,17 +7,19 @@
   command: ls -la "{{CA_DIR}}"
 
 - name: Generate CA Cert and Key
-  command: bash -c "cfssl gencert -initca ca-csr.json | cfssljson -bare ca"
+  command: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
   args:
     chdir: "{{CA_DIR}}"
+    executable: /bin/bash
 
 - name: ls for the CA files
   command: ls -la "{{CA_DIR}}"
 
-- command: bash -c "find . -maxdepth 1 -type f | cut -d'/' -f2"
+- command: find . -maxdepth 1 -type f | cut -d'/' -f2
   register: files_to_copy
   args:
     chdir: "{{CA_DIR}}"
+    executable: /bin/bash
 
 - fetch: src="{{CA_DIR}}{{ item }}" dest="{{CA_DIR_ANSIBLE_LOCAL}}" flat="yes"
   with_items: "{{ files_to_copy.stdout_lines }}"
