@@ -1,19 +1,15 @@
 ---
 # tasks file for bastion-role
 
-- name: Download cfssl tool
+- name: Download cfssl & cfssljson tool
   become: yes
   get_url:
-    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/cfssl
-    dest: /usr/local/bin/cfssl
+    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
+    dest: /usr/local/bin/{{ item }}
     mode: "0755"
-
-- name: Download cfssljson tool
-  become: yes
-  get_url:
-    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssljson_version }}/linux/cfssljson
-    dest: /usr/local/bin/cfssljson
-    mode: "0755"
+  with_items:
+    - cfssl
+    - cfssljson
 
 - name: Download kubectl
   become: yes
@@ -30,3 +26,25 @@
     var: script_output.stdout_lines
 
 - include_tasks: 2-Certificate-Authority.yml
+
+- name: Install boto3 python package
+  pip:
+    name: boto3
+
+- name: Gather information about any instance with a tag key Role and value Example
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_bastion
+
+- name: Gather information about any instance with a tag key Role and value k8s_master
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_master      
+
+- name: Gather information about any instance with a tag key Role and value k8s_worker
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_worker
