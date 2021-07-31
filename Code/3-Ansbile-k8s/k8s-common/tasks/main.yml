@@ -37,5 +37,8 @@
         "curl",
         "gnupg2",
         "software-properties-common",
+        "socat",
+        "conntrack",
+        "ipset",
       ]
     update-cache: yes

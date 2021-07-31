@@ -82,7 +82,7 @@ resource "aws_instance" "k8s-worker-instance" {
   }
   tags = {
     Name = "k8s_worker_instance-${count.index}"
-    Role = "k8s_bastion"
+    Role = "k8s_worker"
   }
 }
 
