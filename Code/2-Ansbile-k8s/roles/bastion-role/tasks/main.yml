@@ -41,10 +41,13 @@
   community.aws.ec2_instance_info:
     region: "{{ EC2_REGION }}"
     filters:
-      "tag:Role": k8s_master      
+      "tag:Role": k8s_master
 
 - name: Gather information about any instance with a tag key Role and value k8s_worker
   community.aws.ec2_instance_info:
     region: "{{ EC2_REGION }}"
     filters:
       "tag:Role": k8s_worker
+
+- name: printing hostname
+  debug: "{{ ansible_facts['nodename'] }}"
