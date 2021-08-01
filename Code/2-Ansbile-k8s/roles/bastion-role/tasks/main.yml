@@ -25,7 +25,7 @@
 - debug:
     var: script_output.stdout_lines
 
-- include_tasks: 2-Certificate-Authority.yml
+# - include_tasks: 2-Certificate-Authority.yml
 
 - name: Install boto3 python package
   pip:
@@ -52,3 +52,5 @@
 - name: printing hostname
   debug:
     msg: "{{ ansible_facts['nodename'] }}"
+
+- include_tasks: 3-Certificate-Generation.yml

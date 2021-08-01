@@ -1,0 +1,4 @@
+- shell: ls -la
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
