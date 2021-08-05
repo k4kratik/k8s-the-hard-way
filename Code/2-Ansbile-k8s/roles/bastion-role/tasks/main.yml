@@ -55,6 +55,14 @@
 
 - include_tasks: 3-Certificate-Generation.yml
 
-- name: printing hostvars
+- name: printing Masters IPs
   debug:
     msg: "{{ groups.masters }}"
+
+- name: printing Workers IPs
+  debug:
+    msg: "{{ groups.workers }}"
+
+- name: printing infividual IPs to debug
+  debug:
+    msg: "{{ groups.masters[0]}}"
