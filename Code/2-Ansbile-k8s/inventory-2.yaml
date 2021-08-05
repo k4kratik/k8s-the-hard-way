@@ -1,0 +1,36 @@
+bastion:
+  hosts:
+    ip-3.238.192.107:
+      ansible_user: ubuntu
+      ansible_host: 3.238.192.107
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+      ansible_python_interpreter: /usr/bin/python3
+      ansible_ssh_private_key_file: ~/tmp/k8s_bastion.pem
+
+masters:
+  hosts:
+    ip-10.0.4.4:
+      ansible_host: 10.0.4.4
+    ip-10.0.5.230:
+      ansible_host: 10.0.5.230
+    ip-10.0.6.66:
+      ansible_host: 10.0.6.66
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_private_key_file: ~/tmp/k8s_controllers.pem
+
+workers:
+  hosts:
+    ip-10.0.4.250:
+      ansible_host: 10.0.4.250
+    ip-10.0.5.41:
+      ansible_host: 10.0.5.41
+    ip-10.0.6.182:
+      ansible_host: 10.0.6.182
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_private_key_file: ~/tmp/k8s_workers.pem

@@ -65,4 +65,8 @@
 
 - name: printing infividual IPs to debug
   debug:
-    msg: "{{ groups.masters[0]}}"
+    msg: "{{ groups.masters[0], groups.masters[1] }}"
+
+- name: "update hostnames"
+  hostname:
+    name: "{{ new_hostname }}"
