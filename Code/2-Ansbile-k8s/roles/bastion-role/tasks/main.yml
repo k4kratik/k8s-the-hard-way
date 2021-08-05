@@ -54,3 +54,7 @@
     msg: "{{ ansible_facts['nodename'] }}"
 
 - include_tasks: 3-Certificate-Generation.yml
+
+- name: printing hostvars
+  debug:
+    msg: "{{ groups.masters }}"
