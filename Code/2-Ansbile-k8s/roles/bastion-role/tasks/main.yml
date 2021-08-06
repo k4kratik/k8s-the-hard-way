@@ -1,62 +1,62 @@
 ---
 # tasks file for bastion-role
 
-# - name: Download cfssl & cfssljson tool
-#   become: yes
-#   get_url:
-#     url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
-#     dest: /usr/local/bin/{{ item }}
-#     mode: "0755"
-#   with_items:
-#     - cfssl
-#     - cfssljson
+- name: Download cfssl & cfssljson tool
+  become: yes
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
+    dest: /usr/local/bin/{{ item }}
+    mode: "0755"
+  with_items:
+    - cfssl
+    - cfssljson
 
-# - name: Download kubectl
-#   become: yes
-#   get_url:
-#     url: https://dl.k8s.io/release/{{kubectl_version}}/bin/linux/amd64/kubectl
-#     dest: /usr/local/bin/kubectl
-#     mode: "0755"
+- name: Download kubectl
+  become: yes
+  get_url:
+    url: https://dl.k8s.io/release/{{kubectl_version}}/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: "0755"
 
-# - name: Check Versions
-#   ansible.builtin.script: files/check_versions.sh
-#   register: script_output
+- name: Check Versions
+  ansible.builtin.script: files/check_versions.sh
+  register: script_output
 
-# - name: Printing output of Check Versions Script
-#   debug:
-#     var: script_output.stdout_lines
+- name: Printing output of Check Versions Script
+  debug:
+    var: script_output.stdout_lines
 
-# - name: Generate Key Pair for CA
-#   include_tasks: 2-Certificate-Authority.yml
+- name: Generate Key Pair for CA
+  include_tasks: 2-Certificate-Authority.yml
 
-# - name: Install boto3 python package (To use below AWS Tasks)
-#   pip:
-#     name: boto3
+- name: Install boto3 python package (To use below AWS Tasks)
+  pip:
+    name: boto3
 
-# - name: Gather information about any instance with a tag key Role and value Example
-#   community.aws.ec2_instance_info:
-#     region: "{{ EC2_REGION }}"
-#     filters:
-#       "tag:Role": k8s_bastion
+- name: Gather information about any instance with a tag key Role and value Example
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_bastion
 
-# - name: Gather information about any instance with a tag key Role and value k8s_master
-#   community.aws.ec2_instance_info:
-#     region: "{{ EC2_REGION }}"
-#     filters:
-#       "tag:Role": k8s_master
+- name: Gather information about any instance with a tag key Role and value k8s_master
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_master
 
-# - name: Gather information about any instance with a tag key Role and value k8s_worker
-#   community.aws.ec2_instance_info:
-#     region: "{{ EC2_REGION }}"
-#     filters:
-#       "tag:Role": k8s_worker
+- name: Gather information about any instance with a tag key Role and value k8s_worker
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_worker
 
 - name: printing hostname
   debug:
     msg: "{{ ansible_facts['nodename'] }}"
 
-# - name: Generation of Other Required Certificates
-#   include_tasks: 3-Certificate-Generation.yml
+- name: Generation of Other Required Certificates
+  include_tasks: 3-Certificate-Generation.yml
 
 - name: printing Masters IPs
   debug:
