@@ -39,3 +39,18 @@
   args:
     chdir: "{{CA_DIR}}"
     executable: /bin/bash
+
+- name: Copying the template for kubelet CSR
+  ansible.builtin.template:
+    src: files/kubelet-csr.json.j2
+    dest: "{{CA_DIR}}/k8s-worker-{{item}}-csr.json"
+  vars:
+    instance_hostname: "k8s-worker-{{item}}"
+  with_sequence: start=0 end={{WORKERS_COUNT - 1}}
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=k8s-worker-{{item}},{{groups.workers[item]}} -profile=kubernetes k8s-worker-{{item}}-csr.json | cfssljson -bare k8s-worker-{{item}}
+  name: Generating Certificate and key for kubelet for worker nodes
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+  with_sequence: start=0 end={{WORKERS_COUNT - 1}}
