@@ -14,3 +14,21 @@
   args:
     chdir: "{{CA_DIR}}"
     executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-proxy-csr.json | cfssljson -bare kube-proxy
+  name: Generating Certificate and key for kube-proxy
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-scheduler-csr.json | cfssljson -bare kube-scheduler
+  name: Generating Certificate and key for kube-scheduler
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes service-account-csr.json | cfssljson -bare service-account
+  name: Generating Certificate and key for kube-scheduler
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
