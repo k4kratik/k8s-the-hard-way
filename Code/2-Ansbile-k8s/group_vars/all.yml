@@ -1,4 +1,4 @@
-SHARED_DIR: ~/REMOTE-ansbile-shared-k8s/
+SHARED_DIR: ~/REMOTE-ansbile-shared-k8s
 
 CA_DIR: "{{SHARED_DIR}}/CA-Files"
 
