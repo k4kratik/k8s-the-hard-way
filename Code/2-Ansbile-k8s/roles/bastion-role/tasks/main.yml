@@ -77,7 +77,12 @@
 #     flat: "yes"
 #   with_items: "{{ files_to_copy.stdout_lines }}"
 
-- name: with_sequence
+# - name: TESTING with_sequence for loop
+#   ansible.builtin.debug:
+#     msg: "{{ groups.masters[item|int] }}"
+#   with_sequence: start=0 end={{MASTERS_COUNT - 1}}
+
+- name: TESTING with_sequence for loop
   ansible.builtin.debug:
-    msg: "{{ groups.masters[item|int] }}"
+    msg: "{{ cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=10.32.0.1,groups.masters,{{INTERNAL_K8S_NLB_DNS}},127.0.0.1,kubernetes.default -profile=kubernetes k8s-api-server-csr.json | cfssljson -bare k8s-api-server }}"
   with_sequence: start=0 end={{MASTERS_COUNT - 1}}
