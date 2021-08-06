@@ -1,35 +1,35 @@
 ---
 # tasks file for bastion-role
 
-- name: Download cfssl & cfssljson tool
-  become: yes
-  get_url:
-    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
-    dest: /usr/local/bin/{{ item }}
-    mode: "0755"
-  with_items:
-    - cfssl
-    - cfssljson
+# - name: Download cfssl & cfssljson tool
+#   become: yes
+#   get_url:
+#     url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
+#     dest: /usr/local/bin/{{ item }}
+#     mode: "0755"
+#   with_items:
+#     - cfssl
+#     - cfssljson
 
-- name: Download kubectl
-  become: yes
-  get_url:
-    url: https://dl.k8s.io/release/{{kubectl_version}}/bin/linux/amd64/kubectl
-    dest: /usr/local/bin/kubectl
-    mode: "0755"
+# - name: Download kubectl
+#   become: yes
+#   get_url:
+#     url: https://dl.k8s.io/release/{{kubectl_version}}/bin/linux/amd64/kubectl
+#     dest: /usr/local/bin/kubectl
+#     mode: "0755"
 
-- name: Check Versions
-  ansible.builtin.script: files/check_versions.sh
-  register: script_output
+# - name: Check Versions
+#   ansible.builtin.script: files/check_versions.sh
+#   register: script_output
 
-- debug:
-    var: script_output.stdout_lines
+# - debug:
+#     var: script_output.stdout_lines
 
 # - include_tasks: 2-Certificate-Authority.yml
 
-- name: Install boto3 python package
-  pip:
-    name: boto3
+# - name: Install boto3 python package
+#   pip:
+#     name: boto3
 
 # - name: Gather information about any instance with a tag key Role and value Example
 #   community.aws.ec2_instance_info:
@@ -53,7 +53,7 @@
   debug:
     msg: "{{ ansible_facts['nodename'] }}"
 
-- include_tasks: 3-Certificate-Generation.yml
+# - include_tasks: 3-Certificate-Generation.yml
 
 - name: printing Masters IPs
   debug:
@@ -63,10 +63,6 @@
   debug:
     msg: "{{ groups.workers }}"
 
-- name: printing infividual IPs to debug
+- name: printing individual IPs to debug
   debug:
     msg: "{{ groups.masters[0], groups.masters[1] }}"
-
-- name: "update hostnames"
-  hostname:
-    name: "{{ new_hostname }}"

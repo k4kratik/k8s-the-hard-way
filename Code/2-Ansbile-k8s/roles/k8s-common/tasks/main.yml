@@ -22,11 +22,11 @@
 
   become: True
 
-- name: install docker # I Want to use containerd btw
-  apt:
-    name: docker.io
-    state: present
-  become: True
+# - name: install docker # I Want to use containerd btw
+#   apt:
+#     name: docker.io
+#     state: present
+#   become: True
 
 - name: install prerequisites
   apt:

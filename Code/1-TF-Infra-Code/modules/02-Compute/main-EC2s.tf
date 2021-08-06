@@ -21,6 +21,12 @@ resource "aws_instance" "k8s-bastion-instance" {
       Name = "k8s_bastion_root_vol-${count.index}"
     }
   }
+
+  user_data = <<EOF
+#!/bin/bash
+sudo hostnamectl set-hostname k8s-bastion-${count.index}
+reboot
+EOF
   tags = {
     Name = "k8s_bastion_instance-${count.index}"
     Role = "k8s_bastion"
@@ -51,6 +57,12 @@ resource "aws_instance" "k8s-controller-instance" {
       Name = "k8s_controller_root_vol-${count.index}"
     }
   }
+
+  user_data = <<EOF
+#!/bin/bash
+sudo hostnamectl set-hostname k8s-master-${count.index}
+reboot
+EOF
   tags = {
     Name = "k8s_controller_instance-${count.index}"
     Role = "k8s_master"
@@ -73,6 +85,12 @@ resource "aws_instance" "k8s-worker-instance" {
   vpc_security_group_ids = ["${aws_security_group.k8s_worker_SG.id}"]
 
   key_name = aws_key_pair.k8s_workers_keypair.key_name
+
+  user_data = <<EOF
+#!/bin/bash
+sudo hostnamectl set-hostname k8s-worker-${count.index}
+reboot
+EOF
 
   root_block_device {
     volume_size = var.worker_ebs_size
