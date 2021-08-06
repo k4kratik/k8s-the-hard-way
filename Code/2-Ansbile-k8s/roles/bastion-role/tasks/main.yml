@@ -22,15 +22,16 @@
   ansible.builtin.script: files/check_versions.sh
   register: script_output
 
-- debug:
+- name: Printing output of Check Versions Script
+  debug:
     var: script_output.stdout_lines
 
   # -name: Generate Key Pair for CA
   # include_tasks: 2-Certificate-Authority.yml
 
-# - name: Install boto3 python package
-#   pip:
-#     name: boto3
+- name: Install boto3 python package (To use below AWS Tasks)
+  pip:
+    name: boto3
 
 - name: Gather information about any instance with a tag key Role and value Example
   community.aws.ec2_instance_info:
@@ -68,7 +69,6 @@
 - name: printing individual IPs to debug
   debug:
     msg: "{{ groups.masters[0], groups.masters[1] }}"
-
 # - name: Copying necessary files for later use
 #   fetch:
 #     src: "{{CA_DIR}}{{ item }}"
