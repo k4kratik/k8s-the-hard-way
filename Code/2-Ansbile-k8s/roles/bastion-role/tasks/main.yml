@@ -26,8 +26,8 @@
   debug:
     var: script_output.stdout_lines
 
-  # -name: Generate Key Pair for CA
-  # include_tasks: 2-Certificate-Authority.yml
+- name: Generate Key Pair for CA
+  include_tasks: 2-Certificate-Authority.yml
 
 - name: Install boto3 python package (To use below AWS Tasks)
   pip:
@@ -55,8 +55,8 @@
   debug:
     msg: "{{ ansible_facts['nodename'] }}"
 
-# - name: Generation of Other Required Certificates
-#   include_tasks: 3-Certificate-Generation.yml
+- name: Generation of Other Required Certificates
+  include_tasks: 3-Certificate-Generation.yml
 
 - name: printing Masters IPs
   debug:
@@ -69,6 +69,7 @@
 - name: printing individual IPs to debug
   debug:
     msg: "{{ groups.masters[0], groups.masters[1] }}"
+
 # - name: Copying necessary files for later use
 #   fetch:
 #     src: "{{CA_DIR}}{{ item }}"
