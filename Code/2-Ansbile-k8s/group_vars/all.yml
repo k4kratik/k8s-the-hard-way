@@ -1,6 +1,8 @@
-CA_DIR: ~/CA_FILES/
+SHARED_DIR: ~/REMOTE-ansbile-shared-k8s/
 
-CA_DIR_ANSIBLE_LOCAL: ~/CA_FILES_FROM_REMOTE/
+CA_DIR: "{{SHARED_DIR}}/CA-Files"
+
+CA_DIR_ANSIBLE_LOCAL: ~/LOCAL-ansbile-shared-k8s/
 
 EC2_REGION: us-east-1
 
