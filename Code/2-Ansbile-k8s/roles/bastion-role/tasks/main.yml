@@ -1,62 +1,62 @@
 ---
 # tasks file for bastion-role
 
-- name: Download cfssl & cfssljson tool
-  become: yes
-  get_url:
-    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
-    dest: /usr/local/bin/{{ item }}
-    mode: "0755"
-  with_items:
-    - cfssl
-    - cfssljson
+# - name: Download cfssl & cfssljson tool
+#   become: yes
+#   get_url:
+#     url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
+#     dest: /usr/local/bin/{{ item }}
+#     mode: "0755"
+#   with_items:
+#     - cfssl
+#     - cfssljson
 
-- name: Download kubectl
-  become: yes
-  get_url:
-    url: https://dl.k8s.io/release/{{kubectl_version}}/bin/linux/amd64/kubectl
-    dest: /usr/local/bin/kubectl
-    mode: "0755"
+# - name: Download kubectl
+#   become: yes
+#   get_url:
+#     url: https://dl.k8s.io/release/{{kubectl_version}}/bin/linux/amd64/kubectl
+#     dest: /usr/local/bin/kubectl
+#     mode: "0755"
 
-- name: Check Versions
-  ansible.builtin.script: files/check_versions.sh
-  register: script_output
+# - name: Check Versions
+#   ansible.builtin.script: files/check_versions.sh
+#   register: script_output
 
-- name: Printing output of Check Versions Script
-  debug:
-    var: script_output.stdout_lines
+# - name: Printing output of Check Versions Script
+#   debug:
+#     var: script_output.stdout_lines
 
-- name: Generate Key Pair for CA
-  include_tasks: 2-Certificate-Authority.yml
+# - name: Generate Key Pair for CA
+#   include_tasks: 2-Certificate-Authority.yml
 
-- name: Install boto3 python package (To use below AWS Tasks)
-  pip:
-    name: boto3
+# - name: Install boto3 python package (To use below AWS Tasks)
+#   pip:
+#     name: boto3
 
-- name: Gather information about any instance with a tag key Role and value Example
-  community.aws.ec2_instance_info:
-    region: "{{ EC2_REGION }}"
-    filters:
-      "tag:Role": k8s_bastion
+# - name: Gather information about any instance with a tag key Role and value Example
+#   community.aws.ec2_instance_info:
+#     region: "{{ EC2_REGION }}"
+#     filters:
+#       "tag:Role": k8s_bastion
 
-- name: Gather information about any instance with a tag key Role and value k8s_master
-  community.aws.ec2_instance_info:
-    region: "{{ EC2_REGION }}"
-    filters:
-      "tag:Role": k8s_master
+# - name: Gather information about any instance with a tag key Role and value k8s_master
+#   community.aws.ec2_instance_info:
+#     region: "{{ EC2_REGION }}"
+#     filters:
+#       "tag:Role": k8s_master
 
-- name: Gather information about any instance with a tag key Role and value k8s_worker
-  community.aws.ec2_instance_info:
-    region: "{{ EC2_REGION }}"
-    filters:
-      "tag:Role": k8s_worker
+# - name: Gather information about any instance with a tag key Role and value k8s_worker
+#   community.aws.ec2_instance_info:
+#     region: "{{ EC2_REGION }}"
+#     filters:
+#       "tag:Role": k8s_worker
 
 - name: printing hostname
   debug:
     msg: "{{ ansible_facts['nodename'] }}"
 
-- name: Generation of Other Required Certificates
-  include_tasks: 3-Certificate-Generation.yml
+# - name: Generation of Other Required Certificates
+#   include_tasks: 3-Certificate-Generation.yml
 
 - name: printing Masters IPs
   debug:
@@ -70,13 +70,20 @@
   debug:
     msg: "{{ groups.masters[0], groups.masters[1] }}"
 
-# - name: Copying necessary files for later use
-#   fetch:
-#     src: "{{CA_DIR}}{{ item }}"
-#     dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
-#     flat: "yes"
-#   with_items: "{{ files_to_copy.stdout_lines }}"
+- name: Finding necessary files for later use
+  find:
+    paths: "{{ CA_DIR }}"
+    patterns: "*.pem"
+  register: all_pem_files
 
-- name: TESTING with_sequence for loop, This will output the cert generation command for API Server
-  ansible.builtin.debug:
-    msg: "cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=10.32.0.1,{% for item in groups.masters %}{{ item }}{% if not loop.last %}, {% endif %}{% endfor %},{{INTERNAL_K8S_NLB_DNS}},127.0.0.1,kubernetes.default -profile=kubernetes k8s-api-server-csr.json | cfssljson -bare k8s-api-server"
+- name: printing all_pem_files
+  debug:
+    msg: "{{ all_pem_files }}"
+
+- name: Copying necessary files for later use
+  ignore_errors: true
+  fetch:
+    src: "{{ item.path }}"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
+    flat: "yes"
+  with_items: "{{all_pem_files.files}}"
