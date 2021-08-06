@@ -79,5 +79,5 @@
 
 - name: with_sequence
   ansible.builtin.debug:
-    msg: "{{ groups.masters[MASTERS_COUNT] }}"
-  with_sequence: start=0 end={{MASTERS_COUNT}}
+    msg: "{{ groups.masters[item|int] }}"
+  with_sequence: start=0 end={{MASTERS_COUNT - 1}}
