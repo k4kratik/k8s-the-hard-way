@@ -33,7 +33,7 @@
     chdir: "{{CA_DIR}}"
     executable: /bin/bash
 
-- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=10.32.0.1,{{groups.masters[0]}},10.0.1.11,10.0.1.12,{{INTERNAL_K8S_NLB_DNS}},127.0.0.1,kubernetes.default -profile=kubernetes k8s-api-server-csr.json | cfssljson -bare k8s-api-server
+- shell: "cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=10.32.0.1,{% for item in groups.masters %}{{ item }}{% if not loop.last %}, {% endif %}{% endfor %},{{INTERNAL_K8S_NLB_DNS}},127.0.0.1,kubernetes.default -profile=kubernetes k8s-api-server-csr.json | cfssljson -bare k8s-api-server"
   name: Generating Certificate and key for Kube API Server
   args:
     chdir: "{{CA_DIR}}"
