@@ -76,3 +76,8 @@
 #     dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
 #     flat: "yes"
 #   with_items: "{{ files_to_copy.stdout_lines }}"
+
+- name: with_sequence
+  ansible.builtin.debug:
+    msg: "{{ groups.masters[MASTERS_COUNT] }}"
+  with_sequence: start=0 end={{MASTERS_COUNT}}
