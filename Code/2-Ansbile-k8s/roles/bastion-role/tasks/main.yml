@@ -131,3 +131,6 @@
     dest: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs/"
     flat: "yes"
   with_items: "{{all_kubeconfig_files.files}}"
+
+- name: Generating the Data Encryption Config and Key
+  include_tasks: 9-k8s-Encryption.yml

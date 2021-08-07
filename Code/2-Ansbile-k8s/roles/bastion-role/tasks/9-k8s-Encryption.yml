@@ -1,0 +1,12 @@
+- name: Generate an encryption key
+  shell: head -c 32 /dev/urandom | base64
+  args:
+    executable: /bin/bash
+  register: ENCRYPTION_KEY_VAR
+
+- name: Copying the Encryption Template
+  template:
+    src: files/encryption-config.yaml.j2
+    dest: "{{CA_DIR}}/encryption-config.yaml"
+  vars:
+    ENCRYPTION_KEY: "{{ENCRYPTION_KEY_VAR.stdout_lines}}"
