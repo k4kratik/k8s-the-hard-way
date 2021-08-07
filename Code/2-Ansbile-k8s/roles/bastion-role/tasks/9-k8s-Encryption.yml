@@ -9,4 +9,4 @@
     src: files/encryption-config.yaml.j2
     dest: "{{CA_DIR}}/encryption-config.yaml"
   vars:
-    ENCRYPTION_KEY: "{{ENCRYPTION_KEY_VAR.stdout_lines}}"
+    ENCRYPTION_KEY: "{{ENCRYPTION_KEY_VAR.stdout}}"
