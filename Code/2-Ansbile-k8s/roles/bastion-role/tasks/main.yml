@@ -80,7 +80,7 @@
   debug:
     msg: "{{ all_pem_files }}"
 
-- name: Copying necessary files for later use
+- name: Copying necessary *.pem files for later use
   ignore_errors: true
   fetch:
     src: "{{ item.path }}"
@@ -103,3 +103,21 @@
 
 - name: Generation of admin kubeconfig file
   include_tasks: 8-Kubeconfig-admin.yml
+
+- name: Finding necessary files for later use
+  find:
+    paths: "{{ CA_DIR }}"
+    patterns: "*.kubeconfig"
+  register: all_kubeconfig_files
+
+- name: printing all kubeconfig files
+  debug:
+    msg: "{{ all_kubeconfig_files }}"
+
+- name: Copying necessary *.kubeconfig files for later use
+  ignore_errors: true
+  fetch:
+    src: "{{ item.path }}"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs"
+    flat: "yes"
+  with_items: "{{all_kubeconfig_files.files}}"
