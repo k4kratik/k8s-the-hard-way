@@ -88,3 +88,6 @@
     flat: "yes"
     mode: 0400
   with_items: "{{all_pem_files.files}}"
+
+- name: Generation of Kubelet kubeconfig file
+  include_tasks: 4-Kubeconfig-Kublet-for-workers.yml
