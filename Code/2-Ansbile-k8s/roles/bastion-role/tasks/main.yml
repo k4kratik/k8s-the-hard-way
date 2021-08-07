@@ -80,6 +80,11 @@
   debug:
     msg: "{{ all_pem_files }}"
 
+- name: Creates directory for pem files
+  file:
+    path: "{{CA_DIR_ANSIBLE_LOCAL}}"
+    state: directory
+
 - name: Copying necessary *.pem files for later use
   ignore_errors: true
   fetch:
@@ -114,10 +119,15 @@
   debug:
     msg: "{{ all_kubeconfig_files }}"
 
+- name: Creates directory for kubeconfig files
+  file:
+    path: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs/"
+    state: directory
+
 - name: Copying necessary *.kubeconfig files for later use
   ignore_errors: true
   fetch:
     src: "{{ item.path }}"
-    dest: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs/"
     flat: "yes"
   with_items: "{{all_kubeconfig_files.files}}"
