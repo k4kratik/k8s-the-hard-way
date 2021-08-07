@@ -86,7 +86,6 @@
     state: directory
 
 - name: Copying necessary *.pem files for later use
-  ignore_errors: true
   fetch:
     src: "{{ item.path }}"
     dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
@@ -125,7 +124,6 @@
     state: directory
 
 - name: Copying necessary *.kubeconfig files for later use
-  ignore_errors: true
   fetch:
     src: "{{ item.path }}"
     dest: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs/"
@@ -134,3 +132,9 @@
 
 - name: Generating the Data Encryption Config and Key
   include_tasks: 9-k8s-Encryption.yml
+
+- name: Copying encryption config file for later use
+  fetch:
+    src: "{{CA_DIR}}/encryption-config.yaml"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
+    flat: "yes"
