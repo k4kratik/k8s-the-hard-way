@@ -91,3 +91,15 @@
 
 - name: Generation of Kubelet kubeconfig file
   include_tasks: 4-Kubeconfig-Kublet-for-workers.yml
+
+- name: Generation of kube-proxy kubeconfig file
+  include_tasks: 5-Kubeconfig-kube-proxy.yml
+
+- name: Generation of kube-controller-manager kubeconfig file
+  include_tasks: 6-Kubeconfig-kube-controller-manager.yml
+
+- name: Generation of kube-scheduler kubeconfig file
+  include_tasks: 7-Kubeconfig-kube-scheduler.yml
+
+- name: Generation of admin kubeconfig file
+  include_tasks: 8-Kubeconfig-admin.yml
