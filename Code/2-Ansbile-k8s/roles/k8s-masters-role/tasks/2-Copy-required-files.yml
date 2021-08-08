@@ -35,6 +35,6 @@
 - name: Copying encryption-config.yaml file
   ansible.builtin.copy:
     src: "{{CA_DIR}}/{{item}}"
-    dest: "{{NODE_K8s_DIR}}"
+    dest: "{{NODE_K8S_DIR}}"
   with_items:
     - encryption-config.yaml
