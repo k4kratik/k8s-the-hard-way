@@ -1,0 +1,13 @@
+- name: Download ETCD
+  get_url:
+    url: https://github.com/etcd-io/etcd/releases/download/{{ ETCD_VER }}/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+    dest: /tmp/
+    mode: "0755"
+
+- name: Extract/Move ETCD
+  shell: |
+    tar -xvf etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+    sudo mv etcd-{{ ETCD_VER }}-linux-amd64/etcd* /usr/local/bin/
+  args:
+    chdir: /tmp/
+    executable: /bin/bash
