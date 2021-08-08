@@ -37,6 +37,7 @@
   template:
     src: "{{item}}"
     dest: /etc/systemd/system/{{item[:-3]}}
+    # truncating string so we can remove last .j2 from the file names
   vars:
     INTERNAL_PRIVATE_IP: "{{ ansible_all_ipv4_addresses | ipaddr('private') | first }}"
   with_items:
