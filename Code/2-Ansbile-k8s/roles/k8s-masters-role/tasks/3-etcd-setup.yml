@@ -43,5 +43,13 @@
   shell: ETCDCTL_API=3 etcdctl member list --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/k8s-api-server.pem --key=/etc/etcd/k8s-api-server-key.pem
   register: ETCD_CMD_OP
 
-- debug:
-    msg: { { ETCD_CMD_OP.stdout } }
+- name: Checking output of above comamnd
+  debug:
+    msg: "{{ ETCD_CMD_OP.stdout }}"
+
+- name: Waits for port 2379, connections, don't start checking for 5 seconds
+  wait_for:
+    host: 127.0.0.1
+    port: 2379
+    delay: 5
+    state: started
