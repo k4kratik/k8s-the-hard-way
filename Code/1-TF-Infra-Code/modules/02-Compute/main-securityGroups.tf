@@ -33,7 +33,7 @@ resource "aws_security_group" "k8s_bastion_SG" {
 resource "aws_security_group" "k8s_controller_SG" {
 
   vpc_id = var.vpc.id
-  name   = "k8s_worker_SG"
+  name   = "k8s_controller_SG"
 
   egress {
     from_port   = 0
@@ -52,6 +52,13 @@ resource "aws_security_group" "k8s_controller_SG" {
     cidr_blocks = ["${aws_instance.k8s-bastion-instance[0].private_ip}/32"]
   }
 
+  ingress {
+    description = "Allow ETCD connection between k8s controllers"
+    from_port   = 2379
+    to_port     = 2380
+    protocol    = "tcp"
+    cidr_blocks = var.private_subnets[*].cidr_block
+  }
 
   tags = {
     Name = "k8s_controller_SG"
@@ -62,7 +69,7 @@ resource "aws_security_group" "k8s_controller_SG" {
 resource "aws_security_group" "k8s_worker_SG" {
 
   vpc_id = var.vpc.id
-  name   = "k8s_controller_SG"
+  name   = "k8s_worker_SG"
 
   egress {
     from_port   = 0
