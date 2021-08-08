@@ -6,3 +6,6 @@
 
 - name: Download and Setup etcd
   include_tasks: 3-etcd-setup.yml
+
+- name: Setting up the control plane
+  include_tasks: 4-bootstrapping-control-plane.yml
