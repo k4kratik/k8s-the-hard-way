@@ -26,3 +26,10 @@
   args:
     chdir: "{{NODE_K8S_DIR}}"
     executable: /bin/bash
+
+- name: Copying the kube-apiserver service file
+  template:
+    src: kube-apiserver.service.j2
+    dest: /etc/systemd/system/kube-apiserver.service
+  vars:
+    INTERNAL_PRIVATE_IP: "{{ ansible_all_ipv4_addresses | ipaddr('private') | first }}"
