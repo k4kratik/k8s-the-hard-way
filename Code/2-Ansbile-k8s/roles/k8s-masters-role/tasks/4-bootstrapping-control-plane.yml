@@ -16,7 +16,13 @@
     mode: 0700
 
 - name: Copying required files to k8s directory
-  shell: cp ca.pem ca-key.pem k8s-api-server-key.pem k8s-api-server.pem service-account-key.pem service-account.pem encryption-config.yaml /var/lib/kubernetes/
+  shell: cp ca.pem ca-key.pem k8s-api-server-key.pem k8s-api-server.pem service-account-key.pem service-account.pem /var/lib/kubernetes/
   args:
     chdir: "{{NODE_CERTS_DIR}}"
+    executable: /bin/bash
+
+- name: Copying encryption-config to k8s directory
+  shell: cp encryption-config.yaml /var/lib/kubernetes/
+  args:
+    chdir: "{{NODE_K8S_DIR}}"
     executable: /bin/bash
