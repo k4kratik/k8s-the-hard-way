@@ -8,7 +8,7 @@
 
 - name: Copying important certs files for k8s-masters
   ansible.builtin.copy:
-    src: "{{CA_DIR}}{{item}}"
+    src: "{{CA_DIR}}/{{item}}"
     dest: "{{NODE_CERTS_DIR}}"
   with_items:
     - ca.pem
@@ -25,7 +25,7 @@
 
 - name: Copying important config files for k8s-masters
   ansible.builtin.copy:
-    src: "{{CA_DIR}}{{item}}"
+    src: "{{CA_DIR}}/{{item}}"
     dest: "{{NODE_KUBECONFIG_DIR}}"
   with_items:
     - admin.kubeconfig
