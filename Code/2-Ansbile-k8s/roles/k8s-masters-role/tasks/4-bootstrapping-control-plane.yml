@@ -76,3 +76,8 @@
   with_items:
     - kube-apiserver-cluster-role.yml
     - kube-apiserver-role-binding.yml
+
+#! Add some step for testing
+# curl -k --cacert ca.pem https://${KUBERNETES_PUBLIC_ADDRESS}/version
+# kubectl get componentstatuses
+

@@ -9,3 +9,6 @@
 
 - name: Setting up the control plane
   include_tasks: 4-bootstrapping-control-plane.yml
+
+- name: Setting up the worker plane
+  include_tasks: 5-bootstrapping-worker-nodes.yml
