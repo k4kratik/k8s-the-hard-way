@@ -1,13 +1,26 @@
-- name: Download ETCD
-  get_url:
-    url: https://github.com/etcd-io/etcd/releases/download/{{ ETCD_VER }}/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
-    dest: /tmp/
-    mode: "0755"
+- name: Download and Unarchive the zip file
+  ansible.builtin.unarchive:
+    src: https://github.com/etcd-io/etcd/releases/download/{{ ETCD_VER }}/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
 
-- name: Extract/Move ETCD
-  shell: |
-    tar -xvf etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
-    sudo mv etcd-{{ ETCD_VER }}-linux-amd64/etcd* /usr/local/bin/
+- name: Move ETCD
+  shell: mv etcd-{{ ETCD_VER }}-linux-amd64/etcd* /usr/local/bin/
   args:
     chdir: /tmp/
+    executable: /bin/bash
+
+- name: Creates directories for etcd
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: 0700
+  with_items:
+    - /etc/etcd
+    - /var/lib/etcd
+
+- name: Copying required files to etcd directory
+  shell: cp ca.pem k8s-api-server.pem k8s-api-server-key.pem /etc/etcd/
+  args:
+    chdir: "{{NODE_CERTS_DIR}}"
     executable: /bin/bash
