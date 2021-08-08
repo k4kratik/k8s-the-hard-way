@@ -1,3 +1,4 @@
 - hosts: masters
   roles:
     - k8s-masters-role
+  become: true
