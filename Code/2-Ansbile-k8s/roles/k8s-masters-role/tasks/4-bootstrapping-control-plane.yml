@@ -27,7 +27,7 @@
     chdir: "{{NODE_K8S_DIR}}"
     executable: /bin/bash
 
-- name: Copying encryption-config to k8s directory
+- name: Copying kubeconfigs to k8s directory
   shell: cp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig /var/lib/kubernetes/
   args:
     chdir: "{{NODE_KUBECONFIG_DIR}}"
@@ -59,7 +59,20 @@
 - name: Ensures /etc/kubernetes/config/ dir exists
   file: path="/etc/kubernetes/config/" state=directory recurse=yes
 
-- name: Copy File for KubeSchedulerConfiguration
+- name: Copy File for KubeSchedulerConfiguration and api-server cluster role
   copy:
-    src: kube-scheduler.yaml
-    dest: /etc/kubernetes/config/kube-scheduler.yaml
+    src: "{{item}}"
+    dest: /etc/kubernetes/config/
+  with_items:
+    - kube-scheduler.yaml
+    - kube-apiserver-cluster-role.yml
+    - kube-apiserver-role-binding.yml
+
+- name: Applying the cluster role
+  shell: kubectl apply --kubeconfig /var/lib/kubernetes/admin.kubeconfig -f {{item}}
+  args:
+    chdir: /etc/kubernetes/config/
+    executable: /bin/bash
+  with_items:
+    - kube-apiserver-cluster-role.yml
+    - kube-apiserver-role-binding.yml
