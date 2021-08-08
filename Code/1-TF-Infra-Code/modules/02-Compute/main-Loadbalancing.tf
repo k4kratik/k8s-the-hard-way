@@ -29,7 +29,7 @@ resource "aws_lb_target_group_attachment" "k8s_masters_tg_attachment" {
 
 resource "aws_lb_listener" "k8s_listener_for_control-plane" {
   load_balancer_arn = aws_lb.k8s_control_plane_lb.arn
-  port              = "443"
+  port              = "6443"
   protocol          = "TCP"
 
   default_action {

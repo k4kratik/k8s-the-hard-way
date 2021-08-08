@@ -60,6 +60,14 @@ resource "aws_security_group" "k8s_controller_SG" {
     cidr_blocks = var.private_subnets[*].cidr_block
   }
 
+  ingress {
+    description = "K8s API Server"
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = var.private_subnets[*].cidr_block
+  }
+
   tags = {
     Name = "k8s_controller_SG"
   }
