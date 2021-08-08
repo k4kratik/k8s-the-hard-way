@@ -8,3 +8,15 @@
     - kubectl
     - kube-scheduler
     - kube-controller-manager
+
+- name: Creates directory for k8s
+  file:
+    path: /var/lib/kubernetes/
+    state: directory
+    mode: 0700
+
+- name: Copying required files to k8s directory
+  shell: cp ca.pem ca-key.pem k8s-api-server-key.pem k8s-api-server.pem service-account-key.pem service-account.pem encryption-config.yaml /var/lib/kubernetes/
+  args:
+    chdir: "{{NODE_CERTS_DIR}}"
+    executable: /bin/bash
