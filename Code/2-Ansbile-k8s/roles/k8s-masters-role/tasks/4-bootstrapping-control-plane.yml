@@ -56,6 +56,9 @@
     - kube-controller-manager.service
     - kube-scheduler.service
 
+- name: Ensures /etc/kubernetes/config/ dir exists
+  file: path="/etc/kubernetes/config/" state=directory recurse=yes
+
 - name: Copy File for KubeSchedulerConfiguration
   copy:
     src: kube-scheduler.yaml
