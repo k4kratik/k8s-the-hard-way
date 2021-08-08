@@ -36,13 +36,13 @@
 - name: Copying the kube-apiserver,kube-controller-manager service file
   template:
     src: "{{item}}"
-    dest: /etc/systemd/system/
+    dest: /etc/systemd/system/{{item[:-3]}}
   vars:
     INTERNAL_PRIVATE_IP: "{{ ansible_all_ipv4_addresses | ipaddr('private') | first }}"
   with_items:
     - kube-apiserver.service.j2
     - kube-controller-manager.service.j2
-    - kube-scheduler.service
+    - kube-scheduler.service.j2
 
 - name: Restart services, also issue daemon-reload to pick up config changes
   ansible.builtin.systemd:
