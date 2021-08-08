@@ -10,3 +10,6 @@ WORKERS_COUNT: 3
 MASTERS_COUNT: 3
 
 INTERNAL_K8S_NLB_DNS: "k8s-control-plane-nlb-578b1558bdbe6e9e.elb.us-east-1.amazonaws.com"
+
+NODE_CERTS_DIR: /etc/k8s/certs/
+NODE_KUBECONFIG_DIR: /etc/k8s/configs/
