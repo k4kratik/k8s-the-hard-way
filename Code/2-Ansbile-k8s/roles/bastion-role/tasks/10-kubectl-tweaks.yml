@@ -1,0 +1,8 @@
+- name: Inserting a line in bashrc #? could use some ansible module like - lineinfile or blockinline or something else
+  shell: |
+    echo 'source <(kubectl completion bash)' >>~/.bashrc
+    echo 'alias k=kubectl' >>~/.bashrc
+    echo 'complete -F __start_kubectl k' >>~/.bashrc
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash

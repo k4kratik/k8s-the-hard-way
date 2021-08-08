@@ -138,3 +138,6 @@
     src: "{{CA_DIR}}/encryption-config.yaml"
     dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
     flat: "yes"
+
+- name: Tweaks for Kubectl
+  include_tasks: 10-kubectl-tweaks.yml
