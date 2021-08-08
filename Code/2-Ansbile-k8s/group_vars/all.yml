@@ -1,3 +1,5 @@
+K8S_VERSION: v1.21.3
+
 SHARED_DIR: ~/REMOTE-ansbile-shared-k8s
 
 CA_DIR: "{{SHARED_DIR}}/CA-Files"
