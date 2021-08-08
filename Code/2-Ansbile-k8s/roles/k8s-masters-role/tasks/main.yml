@@ -1,33 +1,5 @@
 ---
 # tasks file for k8s-masters-role
 
-- name: Creates directory for k8s certificates
-  file:
-    path: "{{NODE_CERTS_DIR}}"
-    state: directory
-
-- name: Copying important certs files for k8s-masters
-  ansible.builtin.copy:
-    src: "{{CA_DIR}}/{{item}}"
-    dest: "{{NODE_CERTS_DIR}}"
-  with_items:
-    - ca.pem
-    - ca-key.pem
-    - k8s-api-server-key.pem
-    - k8s-api-server.pem
-    - service-account-key.pem
-    - service-account.pem
-
-- name: Creates directory for k8s config files
-  file:
-    path: "{{NODE_KUBECONFIG_DIR}}"
-    state: directory
-
-- name: Copying important config files for k8s-masters
-  ansible.builtin.copy:
-    src: "{{CA_DIR}}/{{item}}"
-    dest: "{{NODE_KUBECONFIG_DIR}}"
-  with_items:
-    - admin.kubeconfig
-    - kube-controller-manager.kubeconfig
-    - kube-scheduler.kubeconfig
+- name: Copying required files from bastion to master
+  include_tasks: 2-Copy-required-files.yml
