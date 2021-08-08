@@ -27,9 +27,30 @@
     chdir: "{{NODE_K8S_DIR}}"
     executable: /bin/bash
 
-- name: Copying the kube-apiserver service file
+- name: Copying encryption-config to k8s directory
+  shell: cp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig /var/lib/kubernetes/
+  args:
+    chdir: "{{NODE_KUBECONFIG_DIR}}"
+    executable: /bin/bash
+
+- name: Copying the kube-apiserver,kube-controller-manager service file
   template:
-    src: kube-apiserver.service.j2
-    dest: /etc/systemd/system/kube-apiserver.service
+    src: "{{item}}"
+    dest: /etc/systemd/system/
   vars:
     INTERNAL_PRIVATE_IP: "{{ ansible_all_ipv4_addresses | ipaddr('private') | first }}"
+  with_items:
+    - kube-apiserver.service.j2
+    - kube-controller-manager.service.j2
+    - kube-scheduler.service
+
+- name: Restart services, also issue daemon-reload to pick up config changes
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: "{{item}}"
+    enabled: yes
+  with_items:
+    - kube-apiserver.service
+    - kube-controller-manager.service
+    - kube-scheduler.service
