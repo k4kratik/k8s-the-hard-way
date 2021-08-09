@@ -1,0 +1,13 @@
+- hosts: bastion
+  roles:
+    - bastion-role
+
+- hosts: masters
+  roles:
+    - k8s-masters-role
+  become: true
+
+- hosts: workers
+  roles:
+    - k8s-workers-role
+  become: true
