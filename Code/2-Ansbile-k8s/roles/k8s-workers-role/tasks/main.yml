@@ -2,4 +2,7 @@
 # tasks file for k8s-workers-role
 
 - name: Setting up the worker plane
-  include_tasks: 2-bootstrapping-worker-nodes.yml
+  include_tasks: 2-setting-up-worker-binaries.yml
+
+- name: Setting up the config files
+  include_tasks: 3-copying-configs.yaml
