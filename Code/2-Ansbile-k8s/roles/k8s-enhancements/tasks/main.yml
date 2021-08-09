@@ -1,16 +1,5 @@
 ---
 # tasks file for k8s-enhnacements
-- name: get the username
-  become: false
-  local_action: command whoami
-  register: current_username
 
-- name: Creates directory for kubeconfig files
-  file:
-    path: /home/{{current_username.stdout}}/.kube
-    state: directory
-
-- name: Copy the kubeconfig
-  copy:
-    src: "{{CA_DIR}}admin.kubeconfig"
-    dest: /home/ubuntu/.kube/config/
+- name: copy kubeconfig for bastion
+  include_tasks: 2-copy-kubeconfig.yaml
