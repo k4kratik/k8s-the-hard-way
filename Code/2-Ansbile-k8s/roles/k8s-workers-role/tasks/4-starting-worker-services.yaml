@@ -1,0 +1,10 @@
+- name: Restart services, also issue daemon-reload to pick up config changes
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: "{{item}}"
+    enabled: yes
+  with_items:
+    - kubelet.service
+    - kube-proxy.service
+    - containerd.service
