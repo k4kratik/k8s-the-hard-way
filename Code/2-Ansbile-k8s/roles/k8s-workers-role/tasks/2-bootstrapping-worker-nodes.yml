@@ -39,17 +39,22 @@
 - name: Download crictl binary
   ansible.builtin.unarchive:
     src: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.22.0/crictl-v1.22.0-linux-amd64.tar.gz
-    dest: /usr/local/bin/crictl
+    dest: /usr/local/bin/
     mode: "0755"
     remote_src: yes
     list_files: yes
 
 - name: Download containerd binary
-  ansible.builtin.unarchive:
-    src: https://github.com/containerd/containerd/releases/download/v1.5.5/containerd-1.5.5-linux-amd64.tar.gz
-    dest: /usr/local/bin/
+  get_url:
+    url: https://github.com/containerd/containerd/releases/download/v1.5.5/containerd-1.5.5-linux-amd64.tar.gz
+    dest: /tmp/containerd.tar.gz
     mode: "0755"
-    remote_src: yes
-    list_files: yes
-    include:
-      - bin/
+
+- name: Move containerd binary
+  shell: |
+    mkdir containerd
+    tar -xvf containerd.tar.gz -C containerd
+    mv containerd/bin/* /usr/local/bin/
+  args:
+    chdir: /tmp
+    executable: /bin/bash
