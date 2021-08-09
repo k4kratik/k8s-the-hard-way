@@ -1,0 +1,4 @@
+- hosts: workers
+  roles:
+    - k8s-workers-role
+  become: true

@@ -1,0 +1,5 @@
+---
+# tasks file for k8s-workers-role
+
+- name: Setting up the worker plane
+  include_tasks: 2-bootstrapping-worker-nodes.yml

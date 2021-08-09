@@ -1,4 +1,5 @@
 - name: Inserting a line in bashrc #? could use some ansible module like - lineinfile or blockinline or something else
+  #! Now it is not idempotent, sadly.
   shell: |
     echo 'source <(kubectl completion bash)' >>~/.bashrc
     echo 'alias k=kubectl' >>~/.bashrc
