@@ -1,0 +1,23 @@
+K8S_VERSION: v1.21.3
+
+SHARED_DIR: ~/REMOTE-ansbile-shared-k8s
+
+CA_DIR: "{{SHARED_DIR}}/CA-Files"
+
+CA_DIR_ANSIBLE_LOCAL: ~/LOCAL-ansbile-shared-k8s/
+
+EC2_REGION: us-east-1
+
+WORKERS_COUNT: 3
+MASTERS_COUNT: 3
+
+INTERNAL_K8S_NLB_DNS: "k8s-control-plane-nlb-578b1558bdbe6e9e.elb.us-east-1.amazonaws.com"
+
+NODE_K8S_DIR: /etc/k8s/
+NODE_CERTS_DIR: /etc/k8s/certs/
+NODE_KUBECONFIG_DIR: /etc/k8s/configs/
+
+ETCD_VER: v3.5.0
+
+K8S_SERVICE_RANGE: 10.32.0.0/24
+K8S_CLUSTER_CIDR: 10.200.0.0/16

@@ -1,0 +1,60 @@
+- name: Creates directories for Worker Nodes
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: 0700
+  with_items:
+    - /etc/cni/net.d
+    - /opt/cni/bin
+    - /var/lib/kubelet
+    - /var/lib/kube-proxy
+    - /var/lib/kubernetes
+    - /var/run/kubernetes
+    - /etc/containerd/
+
+- name: Download K8s Worker Components
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/{{K8S_VERSION}}/bin/linux/amd64/{{item}}
+    dest: /usr/local/bin/
+    mode: "0755"
+  with_items:
+    - kube-proxy
+    - kubectl
+    - kubelet
+
+- name: Download runc binary
+  get_url:
+    url: https://github.com/opencontainers/runc/releases/download/v1.0.1/runc.amd64
+    dest: /usr/local/bin/runc
+    mode: "0755"
+
+- name: Download CNI Plugins
+  ansible.builtin.unarchive:
+    src: https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz
+    dest: /opt/cni/bin/
+    mode: "0755"
+    remote_src: yes
+    list_files: yes
+
+- name: Download crictl binary
+  ansible.builtin.unarchive:
+    src: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.22.0/crictl-v1.22.0-linux-amd64.tar.gz
+    dest: /usr/local/bin/
+    mode: "0755"
+    remote_src: yes
+    list_files: yes
+
+- name: Download containerd binary
+  get_url:
+    url: https://github.com/containerd/containerd/releases/download/v1.5.5/containerd-1.5.5-linux-amd64.tar.gz
+    dest: /tmp/containerd.tar.gz
+    mode: "0755"
+
+- name: Move containerd binary
+  shell: |
+    mkdir containerd
+    tar -xvf containerd.tar.gz -C containerd
+    mv containerd/bin/* /usr/local/bin/
+  args:
+    chdir: /tmp
+    executable: /bin/bash

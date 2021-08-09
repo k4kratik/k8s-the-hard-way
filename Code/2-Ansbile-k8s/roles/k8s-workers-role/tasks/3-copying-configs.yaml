@@ -1,0 +1,64 @@
+- name: Copying CA Cert file for k8s-workers
+  ansible.builtin.copy:
+    src: "{{CA_DIR}}/{{item}}"
+    dest: /var/lib/kubernetes/
+  with_items:
+    - ca.pem
+
+- name: Copying Worker cert and key files
+  ansible.builtin.copy:
+    src: "{{CA_DIR}}/{{item}}"
+    dest: /var/lib/kubelet/
+  with_items:
+    - "{{ ansible_hostname }}.pem"
+    - "{{ ansible_hostname }}-key.pem"
+
+- name: Copying kubeconfig for worker
+  ansible.builtin.copy:
+    src: "{{CA_DIR}}/{{ ansible_hostname }}.kubeconfig"
+    dest: /var/lib/kubelet/kubeconfig
+
+- name: Copying the CNI config
+  template:
+    src: 10-bridge.conf.j2
+    dest: /etc/cni/net.d/10-bridge.conf
+
+- name: Copy loopback config
+  copy:
+    src: 99-loopback.conf
+    dest: /etc/cni/net.d/99-loopback.conf
+
+- name: Copy containerd config
+  copy:
+    src: containerd-config.toml
+    dest: /etc/containerd/config.toml
+
+- name: Copy containerd service file
+  copy:
+    src: containerd.service
+    dest: /etc/systemd/system/containerd.service
+
+- name: Copying the kubelet config
+  template:
+    src: kubelet-config.yaml.j2
+    dest: /var/lib/kubelet/kubelet-config.yaml
+
+- name: Copy kubelet service file
+  copy:
+    src: kubelet.service
+    dest: /etc/systemd/system/kubelet.service
+
+- name: Copying kubeconfig for proxy
+  ansible.builtin.copy:
+    src: "{{CA_DIR}}/kube-proxy.kubeconfig"
+    dest: /var/lib/kube-proxy/kubeconfig
+
+- name: Copying the kube-proxy config
+  template:
+    src: kube-proxy-config.yaml.j2
+    dest: /var/lib/kube-proxy/kube-proxy-config.yaml
+
+- name: Copy kube-proxy service file
+  copy:
+    src: kube-proxy.service
+    dest: /etc/systemd/system/kube-proxy.service

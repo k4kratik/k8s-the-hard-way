@@ -1,0 +1,5 @@
+---
+# vars file for bastion-role
+
+cfssl_version: 1.4.1
+cfssljson_version: 1.4.1

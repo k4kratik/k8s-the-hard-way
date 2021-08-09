@@ -1,0 +1,143 @@
+---
+# tasks file for bastion-role
+
+- name: Download cfssl & cfssljson tool
+  become: yes
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/{{ item }}
+    dest: /usr/local/bin/{{ item }}
+    mode: "0755"
+  with_items:
+    - cfssl
+    - cfssljson
+
+- name: Download kubectl
+  become: yes
+  get_url:
+    url: https://dl.k8s.io/release/{{K8S_VERSION}}/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: "0755"
+
+- name: Check Versions
+  ansible.builtin.script: files/check_versions.sh
+  register: script_output
+
+- name: Printing output of Check Versions Script
+  debug:
+    var: script_output.stdout_lines
+
+- name: Generate Key Pair for CA
+  include_tasks: 2-Certificate-Authority.yml
+
+- name: Install boto3 python package (To use below AWS Tasks)
+  pip:
+    name: boto3
+
+- name: Gather information about any instance with a tag key Role and value Example
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_bastion
+
+- name: Gather information about any instance with a tag key Role and value k8s_master
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_master
+
+- name: Gather information about any instance with a tag key Role and value k8s_worker
+  community.aws.ec2_instance_info:
+    region: "{{ EC2_REGION }}"
+    filters:
+      "tag:Role": k8s_worker
+
+- name: printing hostname
+  debug:
+    msg: "{{ ansible_facts['nodename'] }}"
+
+- name: Generation of Other Required Certificates
+  include_tasks: 3-Certificate-Generation.yml
+
+- name: printing Masters IPs
+  debug:
+    msg: "{{ groups.masters }}"
+
+- name: printing Workers IPs
+  debug:
+    msg: "{{ groups.workers }}"
+
+- name: printing individual IPs to debug
+  debug:
+    msg: "{{ groups.masters[0], groups.masters[1] }}"
+
+- name: Finding necessary files for later use
+  find:
+    paths: "{{ CA_DIR }}"
+    patterns: "*.pem"
+  register: all_pem_files
+
+- name: printing all_pem_files
+  debug:
+    msg: "{{ all_pem_files }}"
+
+- name: Creates directory for pem files
+  file:
+    path: "{{CA_DIR_ANSIBLE_LOCAL}}"
+    state: directory
+
+- name: Copying necessary *.pem files for later use
+  fetch:
+    src: "{{ item.path }}"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
+    flat: "yes"
+    mode: 0400
+  with_items: "{{all_pem_files.files}}"
+
+- name: Generation of Kubelet kubeconfig file
+  include_tasks: 4-Kubeconfig-Kublet-for-workers.yml
+
+- name: Generation of kube-proxy kubeconfig file
+  include_tasks: 5-Kubeconfig-kube-proxy.yml
+
+- name: Generation of kube-controller-manager kubeconfig file
+  include_tasks: 6-Kubeconfig-kube-controller-manager.yml
+
+- name: Generation of kube-scheduler kubeconfig file
+  include_tasks: 7-Kubeconfig-kube-scheduler.yml
+
+- name: Generation of admin kubeconfig file
+  include_tasks: 8-Kubeconfig-admin.yml
+
+- name: Finding necessary files for later use
+  find:
+    paths: "{{ CA_DIR }}"
+    patterns: "*.kubeconfig"
+  register: all_kubeconfig_files
+
+- name: printing all kubeconfig files
+  debug:
+    msg: "{{ all_kubeconfig_files }}"
+
+- name: Creates directory for kubeconfig files
+  file:
+    path: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs/"
+    state: directory
+
+- name: Copying necessary *.kubeconfig files for later use
+  fetch:
+    src: "{{ item.path }}"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}kubeconfigs/"
+    flat: "yes"
+  with_items: "{{all_kubeconfig_files.files}}"
+
+- name: Generating the Data Encryption Config and Key
+  include_tasks: 9-k8s-Encryption.yml
+
+- name: Copying encryption config file for later use
+  fetch:
+    src: "{{CA_DIR}}/encryption-config.yaml"
+    dest: "{{CA_DIR_ANSIBLE_LOCAL}}"
+    flat: "yes"
+
+- name: Tweaks for Kubectl
+  include_tasks: 10-kubectl-tweaks.yml

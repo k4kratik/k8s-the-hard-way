@@ -1,0 +1,56 @@
+- name: Copy Files for cert generation
+  copy:
+    src: files/cert_generation/.
+    dest: "{{CA_DIR}}"
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes admin-csr.json | cfssljson -bare admin
+  name: Generating Certificate and key for admin user
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-controller-manager-csr.json | cfssljson -bare kube-controller-manager
+  name: Generating Certificate and key for kube-controller-manager
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-proxy-csr.json | cfssljson -bare kube-proxy
+  name: Generating Certificate and key for kube-proxy
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-scheduler-csr.json | cfssljson -bare kube-scheduler
+  name: Generating Certificate and key for kube-scheduler
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes service-account-csr.json | cfssljson -bare service-account
+  name: Generating Certificate and key for kube-scheduler
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+# https://stackoverflow.com/a/55796502
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=10.32.0.1,{% for item in groups.masters %}{{ item }}{% if not loop.last %},{% endif %}{% endfor %},{{INTERNAL_K8S_NLB_DNS}},127.0.0.1,kubernetes.default -profile=kubernetes k8s-api-server-csr.json | cfssljson -bare k8s-api-server
+  name: Generating Certificate and key for Kube API Server
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+
+- name: Copying the template for kubelet CSR
+  ansible.builtin.template:
+    src: files/cert_generation/kubelet-csr.json.j2
+    dest: "{{CA_DIR}}/k8s-worker-{{item}}-csr.json"
+  vars:
+    instance_hostname: "k8s-worker-{{item}}"
+  with_sequence: start=0 end={{WORKERS_COUNT - 1}}
+
+- shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -hostname=k8s-worker-{{item}},{{groups.workers[item|int]}} -profile=kubernetes k8s-worker-{{item}}-csr.json | cfssljson -bare k8s-worker-{{item}}
+  name: Generating Certificate and key for kubelet for worker nodes
+  args:
+    chdir: "{{CA_DIR}}"
+    executable: /bin/bash
+  with_sequence: start=0 end={{WORKERS_COUNT - 1}}

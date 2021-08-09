@@ -1,0 +1,11 @@
+---
+# tasks file for k8s-masters-role
+
+- name: Copying required files from bastion to master
+  include_tasks: 2-Copy-required-files.yml
+
+- name: Download and Setup etcd
+  include_tasks: 3-etcd-setup.yml
+
+- name: Setting up the control plane
+  include_tasks: 4-bootstrapping-control-plane.yml

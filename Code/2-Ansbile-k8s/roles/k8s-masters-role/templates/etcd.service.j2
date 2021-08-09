@@ -1,0 +1,28 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
+
+[Service]
+ExecStart=/usr/local/bin/etcd \
+  --name {{ansible_hostname}} \
+  --cert-file=/etc/etcd/k8s-api-server.pem \
+  --key-file=/etc/etcd/k8s-api-server-key.pem \
+  --peer-cert-file=/etc/etcd/k8s-api-server.pem \
+  --peer-key-file=/etc/etcd/k8s-api-server-key.pem \
+  --trusted-ca-file=/etc/etcd/ca.pem \
+  --peer-trusted-ca-file=/etc/etcd/ca.pem \
+  --peer-client-cert-auth \
+  --client-cert-auth \
+  --initial-advertise-peer-urls https://{{INTERNAL_PRIVATE_IP}}:2380 \
+  --listen-peer-urls https://{{INTERNAL_PRIVATE_IP}}:2380 \
+  --listen-client-urls https://{{INTERNAL_PRIVATE_IP}}:2379,https://127.0.0.1:2379 \
+  --advertise-client-urls https://{{INTERNAL_PRIVATE_IP}}:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster {% for item in groups.masters %}k8s-master-{{loop.index - 1}}=https://{{ item }}:2380{% if not loop.last %},{% endif %}{% endfor %} \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

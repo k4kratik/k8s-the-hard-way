@@ -1,0 +1,55 @@
+- name: Download and Unarchive the zip file
+  ansible.builtin.unarchive:
+    src: https://github.com/etcd-io/etcd/releases/download/{{ ETCD_VER }}/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Move ETCD
+  shell: mv etcd-{{ ETCD_VER }}-linux-amd64/etcd* /usr/local/bin/
+  args:
+    chdir: /tmp/
+    executable: /bin/bash
+
+- name: Creates directories for etcd
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: 0700
+  with_items:
+    - /etc/etcd
+    - /var/lib/etcd
+
+- name: Copying required files to etcd directory
+  shell: cp ca.pem k8s-api-server.pem k8s-api-server-key.pem /etc/etcd/
+  args:
+    chdir: "{{NODE_CERTS_DIR}}"
+    executable: /bin/bash
+
+- name: Copying the etcd service file
+  template:
+    src: etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
+  vars:
+    INTERNAL_PRIVATE_IP: "{{ ansible_all_ipv4_addresses | ipaddr('private') | first }}"
+
+- name: Restart etcd service, also issue daemon-reload to pick up config changes
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: etcd.service
+    enabled: yes
+
+- name: etcd.service status check
+  shell: ETCDCTL_API=3 etcdctl member list --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/k8s-api-server.pem --key=/etc/etcd/k8s-api-server-key.pem
+  register: ETCD_CMD_OP
+
+- name: Checking output of above comamnd
+  debug:
+    msg: "{{ ETCD_CMD_OP.stdout }}"
+
+- name: Waits for port 2379, connections, don't start checking for 5 seconds
+  wait_for:
+    host: 127.0.0.1
+    port: 2379
+    delay: 5
+    state: started

@@ -1,0 +1,44 @@
+---
+# tasks file for k8s-common
+- name: Get pvt IP
+  shell: ifconfig | grep "inet " | grep -v 127.0.0.1 | awk ' FNR == 1 {print $2}'
+  register: HOST_IP_var
+
+- name: set Pvt IP
+  set_fact:
+    HOST_IP: "{{ HOST_IP_var.stdout }}"
+
+- name: output the hostname
+  debug:
+    msg: "{{ ansible_hostname }}"
+
+- name: Update apt-get repo and cache
+  apt: update_cache=yes force_apt_get=yes
+
+- name: install python3-pip
+  apt:
+    name: python3-pip
+    state: present
+
+  become: True
+
+# - name: install docker # I Want to use containerd btw
+#   apt:
+#     name: docker.io
+#     state: present
+#   become: True
+
+- name: install prerequisites
+  apt:
+    name:
+      [
+        "apt-transport-https",
+        "ca-certificates",
+        "curl",
+        "gnupg2",
+        "software-properties-common",
+        "socat",
+        "conntrack",
+        "ipset",
+      ]
+    update-cache: yes
