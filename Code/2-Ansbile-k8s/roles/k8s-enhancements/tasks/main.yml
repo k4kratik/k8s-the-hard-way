@@ -3,3 +3,6 @@
 
 - name: copy kubeconfig for bastion
   include_tasks: 2-copy-kubeconfig.yaml
+
+- name: Apply weave networking
+  include_tasks: 3-cluster-netwroking-add-on.yml
