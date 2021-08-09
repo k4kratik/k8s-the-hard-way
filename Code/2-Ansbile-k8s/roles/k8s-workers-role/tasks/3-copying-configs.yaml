@@ -48,6 +48,11 @@
     src: kubelet.service
     dest: /etc/systemd/system/kubelet.service
 
+- name: Copying kubeconfig for proxy
+  ansible.builtin.copy:
+    src: "{{CA_DIR}}/kube-proxy.kubeconfig"
+    dest: /var/lib/kube-proxy/kubeconfig
+
 - name: Copying the kube-proxy config
   template:
     src: kube-proxy-config.yaml.j2
