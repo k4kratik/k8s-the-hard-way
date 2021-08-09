@@ -22,20 +22,24 @@
     - kubectl
     - kubelet
 
-- name: Download runc & crictl binary
-  become: yes
+- name: Download runc binary
   get_url:
-    url: "{{item}}"
-    dest: /usr/local/bin/
+    url: https://github.com/opencontainers/runc/releases/download/v1.0.1/runc.amd64
+    dest: /usr/local/bin/runc
     mode: "0755"
-  with_items:
-    - https://github.com/opencontainers/runc/releases/download/v1.0.1/runc.amd64
-    - https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.22.0/crictl-v1.22.0-linux-amd64.tar.gz
 
 - name: Download CNI Plugins
   ansible.builtin.unarchive:
     src: https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz
     dest: /opt/cni/bin/
+    mode: "0755"
+    remote_src: yes
+    list_files: yes
+
+- name: Download crictl binary
+  ansible.builtin.unarchive:
+    src: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.22.0/crictl-v1.22.0-linux-amd64.tar.gz
+    dest: /usr/local/bin/crictl
     mode: "0755"
     remote_src: yes
     list_files: yes
@@ -48,4 +52,4 @@
     remote_src: yes
     list_files: yes
     include:
-      - bin/*
+      - bin/
