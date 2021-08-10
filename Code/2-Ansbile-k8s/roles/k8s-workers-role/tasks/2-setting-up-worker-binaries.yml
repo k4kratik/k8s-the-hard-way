@@ -58,3 +58,9 @@
   args:
     chdir: /tmp
     executable: /bin/bash
+
+- name: install prerequisites - bridge-utils
+  apt:
+    name:
+      - bridge-utils
+    update-cache: yes
