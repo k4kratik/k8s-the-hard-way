@@ -4,6 +4,6 @@
 snapshotter = "overlayfs"
 
 [plugins.cri.containerd.default_runtime]
-runtime_type = "io.containerd.runtime.v2.linux" # In logs, I saw "runtime v1 is deprecated since containerd v1.4, consider using runtime v2" So I am using v2 here
+runtime_type = "io.containerd.runtime.v1.linux" # In logs, I saw "runtime v1 is deprecated since containerd v1.4, consider using runtime v2"
 runtime_engine = "/usr/local/bin/runc"
 runtime_root = ""
