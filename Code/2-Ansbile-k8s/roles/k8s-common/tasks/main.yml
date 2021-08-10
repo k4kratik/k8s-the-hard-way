@@ -42,3 +42,13 @@
         "ipset",
       ]
     update-cache: yes
+
+- name: Update the /etc/hosts file with details of all nodes # Ref - https://www.middlewareinventory.com/blog/ansible-update-etc-hosts-file-across-all-hosts/
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ".*\t{{ hostvars[item]['ansible_hostname']}}\t{{ hostvars[item]['ansible_hostname']}}"
+    line: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}\t{{ hostvars[item]['ansible_hostname']}}"
+    state: present
+    backup: yes
+  when: ansible_hostname != "{{ item }}" or ansible_hostname == "{{ item }}" # Little confused about using this
+  with_items: "{{groups['all']}}"
