@@ -8,7 +8,7 @@
     "ipam": {
         "type": "host-local",
         "ranges": [
-            [{"subnet": "{{K8S_CLUSTER_CIDR | replace('0.0/16', CURRENT_INSTANCE_NUMBER ~ '.0/16')}}"}]
+            [{"subnet": "{{K8S_CLUSTER_CIDR | replace('0.0/16', CURRENT_INSTANCE_NUMBER ~ '.0/24')}}"}]
         ],
         "routes": [{"dst": "0.0.0.0/0"}]
     }
