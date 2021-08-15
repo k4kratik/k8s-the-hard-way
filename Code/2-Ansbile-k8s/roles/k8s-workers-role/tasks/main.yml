@@ -9,3 +9,6 @@
 
 - name: Starting the worker services
   include_tasks: 4-starting-worker-services.yaml
+
+# failed to set bridge addr cni0 already has an ip address different from
+# https://stackoverflow.com/a/61544151
