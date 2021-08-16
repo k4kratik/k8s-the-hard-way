@@ -56,6 +56,14 @@
     state: present
     reload: yes
 
+- name: Get module check output
+  shell: lsmod | grep br_netfilter
+  register: br_netfilter
+
+- name: debugging br_netfilter
+  debug:
+    msg: "{{ br_netfilter.stdout }}"
+
 - name: Update the /etc/hosts file with details of all nodes # Ref - https://www.middlewareinventory.com/blog/ansible-update-etc-hosts-file-across-all-hosts/
   lineinfile:
     dest: "/etc/hosts"
