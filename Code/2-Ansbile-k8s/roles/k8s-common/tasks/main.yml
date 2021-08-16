@@ -40,21 +40,18 @@
     dest: /etc/modules-load.d/k8s.conf
     force: yes
 
-- name: Setting the sysctl conf ipv4
-  sysctl:
-    name: net.bridge.bridge-nf-call-iptables
-    value: 1
-    sysctl_set: yes
-    state: present
-    reload: yes
+- name: Setting the sysctl conf
+  copy:
+    content: "
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+"
+    dest: /etc/sysctl.d/k8s.conf
+    force: yes
 
-- name: Setting the sysctl conf ipv4
-  sysctl:
-    name: net.bridge.bridge-nf-call-ip6tables
-    value: 1
-    sysctl_set: yes
-    state: present
-    reload: yes
+- name: reloading sysctl
+  shell: sysctl --system
+  become: true
 
 - name: Get module check output
   shell: lsmod | grep br_netfilter
