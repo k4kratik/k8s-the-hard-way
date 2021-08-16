@@ -6,13 +6,13 @@
     executable: /bin/bash
 
 # Download and apply Core DNS manifest
-- name: Download Core-DNS manifest to the cluster.
-  ansible.builtin.get_url:
-    url: https://storage.googleapis.com/kubernetes-the-hard-way/coredns-1.8.yaml
-    dest: ~/coredns.yaml
-    mode: "0664"
+- name: Copy the core-dns file
+  copy:
+    src: files/core-dns.yml
+    dest: /home/{{current_username.stdout}}/core-dns.yml
+    owner: "{{current_username.stdout}}"
 
-- name: Apply Core-DNS manifest to the cluster.
-  community.kubernetes.k8s:
-    state: present
-    src: ~/coredns.yaml
+# - name: Apply Core-DNS manifest to the cluster.
+#   community.kubernetes.k8s:
+#     state: present
+#     src: ~/coredns.yaml
