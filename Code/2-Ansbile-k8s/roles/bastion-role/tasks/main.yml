@@ -72,7 +72,8 @@
 
 - name: Finding necessary files for later use
   find:
-    paths: "{{ CA_DIR }}"
+    paths:
+      - "{{ CA_DIR }}"
     patterns: "*.pem"
   register: all_pem_files
 
@@ -110,7 +111,8 @@
 
 - name: Finding necessary files for later use
   find:
-    paths: "{{ CA_DIR }}"
+    paths:
+      - "{{ CA_DIR }}"
     patterns: "*.kubeconfig"
   register: all_kubeconfig_files
 
