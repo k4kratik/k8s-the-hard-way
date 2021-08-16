@@ -43,7 +43,7 @@
 - name: Setting the sysctl conf
   copy:
     content: "
-net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-ip6tables = 1\n
 net.bridge.bridge-nf-call-iptables = 1
 "
     dest: /etc/sysctl.d/k8s.conf
@@ -51,6 +51,10 @@ net.bridge.bridge-nf-call-iptables = 1
 
 - name: reloading sysctl
   shell: sysctl --system
+  become: true
+
+- name: loading the module br_netfilter
+  shell: modprobe br_netfilter
   become: true
 
 - name: Get module check output
