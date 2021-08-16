@@ -1,6 +1,6 @@
 bastion:
   hosts:
-    3.235.43.101:
+    3.238.21.222:
       # new_hostname: k8s-bastion
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
@@ -9,11 +9,11 @@ bastion:
 
 masters:
   hosts:
-    10.0.4.98:
+    10.0.4.227:
       # new_hostname: k8s-master-0
-    10.0.5.65:
+    10.0.5.31:
       # new_hostname: k8s-master-1
-    10.0.6.18:
+    10.0.6.194:
       # new_hostname: k8s-master-2
   vars:
     ansible_user: ubuntu
@@ -23,11 +23,11 @@ masters:
 
 workers:
   hosts:
-    10.0.4.76:
+    10.0.4.46:
       # new_hostname: k8s-worker-0
-    10.0.5.167:
+    10.0.5.5:
       # new_hostname: k8s-worker-1
-    10.0.6.89:
+    10.0.6.46:
       # new_hostname: k8s-worker-2
   vars:
     ansible_user: ubuntu
