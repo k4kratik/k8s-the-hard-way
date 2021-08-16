@@ -114,6 +114,14 @@ resource "aws_security_group" "k8s_worker_SG" {
   }
 
   ingress {
+    description = "Weave"
+    from_port   = 6783
+    to_port     = 6783
+    protocol    = "tcp"
+    cidr_blocks = var.private_subnets[*].cidr_block
+  }
+
+  ingress {
     description = "NodePort Ephemeral Ports"
     from_port   = 30000
     to_port     = 32767
