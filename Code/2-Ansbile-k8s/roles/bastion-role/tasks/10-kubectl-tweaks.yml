@@ -5,6 +5,7 @@
     echo 'alias k=kubectl' >>~/.bashrc
     echo 'complete -F __start_kubectl k' >>~/.bashrc
     echo 'alias c=clear' >>~/.bashrc
+    echo 'alias kpo="kubectl get po -A -o wide --show-labels"' >>~/.bashrc
   args:
     chdir: "{{CA_DIR}}"
     executable: /bin/bash
