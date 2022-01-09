@@ -15,7 +15,7 @@ resource "aws_lb" "k8s_control_plane_lb" {
 resource "aws_lb_target_group" "k8s_masters_tg" {
   name        = "k8s-masters-tg"
   port        = 6443
-  protocol    = "HTTPS"
+  protocol    = "HTTP"
   vpc_id      = var.vpc.id
   target_type = "ip"
 
