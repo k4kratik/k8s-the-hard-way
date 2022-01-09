@@ -1,8 +1,8 @@
 resource "aws_lb" "k8s_control_plane_lb" {
   name               = "k8s-control-plane-nlb"
   internal           = true
-  load_balancer_type = "network"
-  # security_groups    = [aws_security_group.k8s_control_plane_lb_sg.id]
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.k8s_control_plane_lb_sg.id]
   #! NLB Does not require a security group https://stackoverflow.com/q/63235672
   subnets = var.private_subnets.*.id
 
