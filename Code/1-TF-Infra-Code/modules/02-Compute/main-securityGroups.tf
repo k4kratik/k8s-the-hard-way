@@ -105,7 +105,7 @@ resource "aws_security_group" "k8s_worker_SG" {
     cidr_blocks = ["${aws_instance.k8s-bastion-instance[0].private_ip}/32"]
   }
 
-    ingress {
+  ingress {
     description = "Kubelet API"
     from_port   = 10250
     to_port     = 10250
@@ -159,5 +159,34 @@ resource "aws_security_group" "k8s_public_lb_sg" {
 
   tags = {
     Name = "k8s_public_lb_sg"
+  }
+}
+
+# SG for K8s Control Plane ALB
+
+
+resource "aws_security_group" "k8s_control_plane_lb_sg" {
+
+  vpc_id = var.vpc.id
+  name   = "k8s_control_plane_lb_sg"
+
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow Access for some App"
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = var.private_subnets[*].cidr_block
+  }
+
+  tags = {
+    Name = "k8s_control_plane_lb_sg"
   }
 }
