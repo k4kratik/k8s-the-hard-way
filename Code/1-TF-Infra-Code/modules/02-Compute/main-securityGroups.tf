@@ -183,7 +183,7 @@ resource "aws_security_group" "k8s_control_plane_lb_sg" {
     from_port   = 6443
     to_port     = 6443
     protocol    = "TCP"
-    cidr_blocks = var.private_subnets[*].cidr_block
+    cidr_blocks = var.vpc.cidr_block
   }
 
   tags = {

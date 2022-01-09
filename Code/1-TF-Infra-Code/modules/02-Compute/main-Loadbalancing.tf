@@ -18,6 +18,15 @@ resource "aws_lb_target_group" "k8s_masters_tg" {
   protocol    = "HTTP"
   vpc_id      = var.vpc.id
   target_type = "ip"
+
+  health_check {
+    healthy_threshold   = 5
+    interval            = 10
+    unhealthy_threshold = 3
+    path                = "/healthz"
+    protocol            = "HTTPS"
+  }
+
 }
 
 resource "aws_lb_target_group_attachment" "k8s_masters_tg_attachment" {
