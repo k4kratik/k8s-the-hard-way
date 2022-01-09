@@ -1,36 +1,36 @@
 bastion:
   hosts:
-    10.0.1.127:
+    10.0.1.121:
       # new_hostname: k8s-bastion
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
       ansible_python_interpreter: /usr/bin/python3
-      ansible_ssh_private_key_file: ~/tmp/k8s_bastion.pem
+      ansible_ssh_private_key_file: ~/tmp/k8s_bastion.pem #! Make sure you do have this key on this specified path
 
 masters:
   hosts:
-    10.0.4.222:
+    10.0.4.199:
     # new_hostname: k8s-master-0
-    10.0.5.141:
+    10.0.5.58:
       # new_hostname: k8s-master-1
-    10.0.6.48:
+    10.0.6.252:
       # new_hostname: k8s-master-2
   vars:
     ansible_user: ubuntu
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_python_interpreter: /usr/bin/python3
-    ansible_ssh_private_key_file: ~/tmp/k8s_controllers.pem
+    ansible_ssh_private_key_file: ~/tmp/k8s_controllers.pem  #! Make sure you do have this key on this specified path
 
 workers:
   hosts:
-    10.0.4.136:
+    10.0.4.113:
       # new_hostname: k8s-worker-0
-    10.0.5.234:
+    10.0.5.15:
       # new_hostname: k8s-worker-1
-    10.0.6.154:
+    10.0.6.76:
       # new_hostname: k8s-worker-2
   vars:
     ansible_user: ubuntu
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_python_interpreter: /usr/bin/python3
-    ansible_ssh_private_key_file: ~/tmp/k8s_workers.pem
+    ansible_ssh_private_key_file: ~/tmp/k8s_workers.pem  #! Make sure you do have this key on this specified path
