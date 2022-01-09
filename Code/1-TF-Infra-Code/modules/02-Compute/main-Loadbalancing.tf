@@ -1,5 +1,5 @@
 resource "aws_lb" "k8s_control_plane_lb" {
-  name               = "k8s-control-plane-nlb"
+  name               = "k8s-control-plane-alb"
   internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.k8s_control_plane_lb_sg.id]
