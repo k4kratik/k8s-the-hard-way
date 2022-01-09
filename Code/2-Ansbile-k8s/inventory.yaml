@@ -1,6 +1,6 @@
 bastion:
   hosts:
-    10.0.1.121:
+    107.21.197.220:
       # new_hostname: k8s-bastion
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
