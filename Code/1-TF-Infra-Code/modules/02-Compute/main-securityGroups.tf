@@ -182,7 +182,7 @@ resource "aws_security_group" "k8s_control_plane_lb_sg" {
     description = "Allow Access for some App"
     from_port   = 6443
     to_port     = 6443
-    protocol    = "HTTP"
+    protocol    = "TCP"
     cidr_blocks = var.private_subnets[*].cidr_block
   }
 
