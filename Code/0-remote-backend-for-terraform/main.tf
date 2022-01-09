@@ -3,7 +3,8 @@ provider "aws" {
 }
 
 variable "account_id" {
-  value = "062439867991"
+  type = number
+  default = "062439867991"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
