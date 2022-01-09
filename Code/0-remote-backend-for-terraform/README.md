@@ -20,5 +20,7 @@ https://medium.com/@itsmattburgess/why-you-should-be-using-remote-state-in-terra
 So  before starting anything, You have to setup your s3 backend.
 
 ```
+terraform init
+
 terraform apply
 ```
