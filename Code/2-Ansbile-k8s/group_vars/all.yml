@@ -12,7 +12,11 @@ EC2_REGION: us-east-1
 WORKERS_COUNT: 3
 MASTERS_COUNT: 3
 
+<<<<<<< HEAD
 INTERNAL_K8S_NLB_DNS: "k8s-control-plane-nlb-5f209953b0bf0f22.elb.us-east-1.amazonaws.com"
+=======
+INTERNAL_K8S_LB_DNS: "internal-k8s-control-plane-alb-1485315028.us-east-1.elb.amazonaws.com"
+>>>>>>> 229bc8122ced33ca90ff795da755561a35338fa4
 
 NODE_K8S_DIR: /etc/k8s/
 NODE_CERTS_DIR: /etc/k8s/certs/

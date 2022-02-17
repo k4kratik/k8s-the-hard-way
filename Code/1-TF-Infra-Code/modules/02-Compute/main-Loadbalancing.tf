@@ -1,8 +1,8 @@
 resource "aws_lb" "k8s_control_plane_lb" {
-  name               = "k8s-control-plane-nlb"
+  name               = "k8s-control-plane-alb"
   internal           = true
-  load_balancer_type = "network"
-  # security_groups    = [aws_security_group.k8s_control_plane_lb_sg.id]
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.k8s_control_plane_lb_sg.id]
   #! NLB Does not require a security group https://stackoverflow.com/q/63235672
   subnets = var.private_subnets.*.id
 
@@ -15,9 +15,18 @@ resource "aws_lb" "k8s_control_plane_lb" {
 resource "aws_lb_target_group" "k8s_masters_tg" {
   name        = "k8s-masters-tg"
   port        = 6443
-  protocol    = "TCP"
+  protocol    = "HTTPS"
   vpc_id      = var.vpc.id
   target_type = "ip"
+
+  health_check {
+    healthy_threshold   = 5
+    interval            = 10
+    unhealthy_threshold = 3
+    path                = "/healthz"
+    protocol            = "HTTPS"
+  }
+
 }
 
 resource "aws_lb_target_group_attachment" "k8s_masters_tg_attachment" {
@@ -30,7 +39,7 @@ resource "aws_lb_target_group_attachment" "k8s_masters_tg_attachment" {
 resource "aws_lb_listener" "k8s_listener_for_control-plane" {
   load_balancer_arn = aws_lb.k8s_control_plane_lb.arn
   port              = "6443"
-  protocol          = "TCP"
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"
