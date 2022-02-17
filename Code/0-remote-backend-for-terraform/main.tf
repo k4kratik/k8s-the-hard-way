@@ -2,11 +2,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-variable "account_id" {
-  type = number
-  default = "062439867991"
-}
-
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "terraform-storage-bucket-${var.account_id}"
 
