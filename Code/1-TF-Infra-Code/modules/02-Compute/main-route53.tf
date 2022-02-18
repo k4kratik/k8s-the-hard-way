@@ -11,6 +11,6 @@ resource "aws_route53_record" "k8s_controller_lb_record" {
   name    = "k8s-controller-load-balancer.kratik.com"
   type    = "CNAME"
   ttl     = "300"
-  #   records = [aws_lb.k8s_control_plane_lb.dns_name]
-  records = ["K8s-test-5e81546dd5da2e12.elb.us-east-1.amazonaws.com"]
+  records = [aws_lb.k8s_control_plane_lb.dns_name]
+  # records = ["K8s-test-5e81546dd5da2e12.elb.us-east-1.amazonaws.com"]
 }
