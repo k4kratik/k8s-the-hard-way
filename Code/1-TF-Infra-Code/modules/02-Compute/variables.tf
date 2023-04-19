@@ -31,7 +31,7 @@ variable "k8s-workers-count" {
 # Generating a pseudo variable, we will pass its value in root.tf in root module.
 
 variable "instance_type" {
-  default = "t2.micro"
+  default = "t3.medium"
 }
 
 variable "public_subnets" {

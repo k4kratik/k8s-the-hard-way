@@ -12,16 +12,6 @@
   debug:
     msg: "{{ ansible_hostname }}"
 
-- name: Update apt-get repo and cache
-  apt: update_cache=yes force_apt_get=yes
-
-- name: install python3-pip
-  apt:
-    name: python3-pip
-    state: present
-
-  become: True
-
 # - name: install docker # I Want to use containerd btw
 #   apt:
 #     name: docker.io
@@ -40,5 +30,47 @@
         "socat",
         "conntrack",
         "ipset",
+        "python3-pip",
       ]
     update-cache: yes
+
+- name: ensure file exists
+  copy:
+    content: "br_netfilter"
+    dest: /etc/modules-load.d/k8s.conf
+    force: yes
+
+- name: Setting the sysctl conf
+  copy:
+    content: "
+      net.bridge.bridge-nf-call-ip6tables = 1\n
+      net.bridge.bridge-nf-call-iptables = 1
+      "
+    dest: /etc/sysctl.d/k8s.conf
+    force: yes
+
+- name: reloading sysctl
+  shell: sysctl --system
+  become: true
+
+- name: loading the module br_netfilter
+  shell: modprobe br_netfilter
+  become: true
+
+- name: Get module check output
+  shell: lsmod | grep br_netfilter
+  register: br_netfilter
+
+- name: debugging br_netfilter
+  debug:
+    msg: "{{ br_netfilter.stdout }}"
+
+- name: Update the /etc/hosts file with details of all nodes # Ref - https://www.middlewareinventory.com/blog/ansible-update-etc-hosts-file-across-all-hosts/
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ".*\t{{ hostvars[item]['ansible_hostname']}}\t{{ hostvars[item]['ansible_hostname']}}"
+    line: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}\t{{ hostvars[item]['ansible_hostname']}}"
+    state: present
+    backup: yes
+  when: ansible_hostname != "{{ item }}" or ansible_hostname == "{{ item }}" # Little confused about using this
+  with_items: "{{groups['all']}}"

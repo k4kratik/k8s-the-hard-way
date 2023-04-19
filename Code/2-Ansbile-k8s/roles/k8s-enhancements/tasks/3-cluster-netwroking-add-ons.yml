@@ -1,0 +1,18 @@
+# Download and apply manifest
+- name: apply weave net
+  become: false
+  shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+  args:
+    executable: /bin/bash
+
+# Download and apply Core DNS manifest
+- name: Copy the core-dns file
+  copy:
+    src: files/core-dns.yml
+    dest: /home/{{current_username.stdout}}/core-dns.yml
+    owner: "{{current_username.stdout}}"
+
+# - name: Apply Core-DNS manifest to the cluster.
+#   community.kubernetes.k8s:
+#     state: present
+#     src: ~/coredns.yaml

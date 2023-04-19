@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-storage-bucket-996594610783"
+  bucket = "terraform-storage-bucket-${var.account_id}"
 
   versioning {
     enabled = true
